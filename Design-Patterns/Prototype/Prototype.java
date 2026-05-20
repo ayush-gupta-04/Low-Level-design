@@ -3,8 +3,8 @@ import java.util.Arrays;
 import java.util.List;
 
 // 1. Create a Prototype Interface 🧬
-interface Prototype {
-    Monster clone();
+interface Prototype<T> {
+    T clone();
 }
 
 // 2. The nested object (The Backpack 🎒)
@@ -25,7 +25,7 @@ class Inventory {
 }
 
 // 3. The Concrete Prototype
-class Monster implements Prototype {
+class Monster implements Prototype<Monster> {
     String name;
     Inventory inventory;   // will require deep copy !
 
