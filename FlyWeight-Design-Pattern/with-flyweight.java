@@ -30,7 +30,7 @@ class FlyWeightContext{
     }
 
     public static int getMemory(){
-        return 2 + Integer.BYTES*4;
+        return 4 + Integer.BYTES*2;
     }
 }
 
