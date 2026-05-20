@@ -12,7 +12,7 @@ class FlyWeight{
     }
 
     public static int getMemory(){
-        return Character.BYTES*6;
+        return Character.BYTES*20;
     }
 }
 
@@ -75,7 +75,7 @@ class Game {
 public class Main{
     public static void main(String[] args) {
         Game g = new Game();
-        g.makeFlyWeights(100000);
+        g.makeFlyWeights(1_000_000);
         System.out.println( "Total Memory : " + g.calcMemory());
         System.out.println( "Total Memory in MB : " + g.calcMemory()/(1024.0*1024.0));
     }
