@@ -1,5 +1,10 @@
+// we can have some common ways to create the HttpRequest.
+// director defines predefined methods to create HttpRequest obj using builder internally.
+
+
 import java.util.*;
 
+// ------------------ HttpRequest with Simple Builder -------------------
 class HttpRequest {
     private String url;
     private String method;
