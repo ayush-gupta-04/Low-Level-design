@@ -6,7 +6,7 @@ class HttpRequest {
     private Map<String, String> headers;
     private Map<String,String> queryParams;
     private String body;
-    private int timeout; // in seconds
+    private int timeout;
 
     // Private constructor - can only be accessed by the Builder
     HttpRequest() {
@@ -15,7 +15,6 @@ class HttpRequest {
         body = "";
     }
 
-    // Method to execute the HTTP request
     public void execute() {
         System.out.println("Executing " + method + " request to " + url);
 
@@ -39,7 +38,9 @@ class HttpRequest {
         System.out.println("Request executed successfully!");
     }
 
+
     // Builder class as a nested class to access private members
+    // Must be static
     public static class HttpRequestBuilder {
         private HttpRequest req;
 
@@ -78,9 +79,10 @@ class HttpRequest {
             return this;
         }
 
-        // Build method to create the immutable HttpRequest object
+        // Build method to create the immutable HttpRequest object.
+        // Build method stops the method chaining.
         public HttpRequest build() {
-            // Validation logic can be added here
+            // Validation logic can be added here.
             if (req.url == null || req.url.isEmpty()) {
                 throw new RuntimeException("URL cannot be empty");
             }
