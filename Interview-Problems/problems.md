@@ -3,6 +3,7 @@
 - ✅ Design Parking Lot
 - Design Tic Tac Toe Game
 - Design a Snake and Ladder game
+- Design Snake and Food Game
 ### medium
 - Design Meeting Scheduler
 - Design Splitwise
