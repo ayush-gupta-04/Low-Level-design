@@ -1,5 +1,5 @@
 ## Easy Problems
-- *Design Parking Lot
+- [✅] Design Parking Lot
 - *Design Tic Tac Toe Game
 - *Design a Snake and Ladder game
 - *Design a Vending Machine
