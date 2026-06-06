@@ -1,4 +1,4 @@
-# Most Important (for freshers): 
+## Most Important (for freshers): 
 ### easy 
 - ✅ Design Parking Lot
 - Design Tic Tac Toe Game
@@ -11,7 +11,7 @@
 - Design an Elevator System
 - Design a Vending Machine
 
-# Important (for freshers): 
+## Important (for freshers): 
 ### easy 
 - Design Logging Framework
 - Design Traffic Signal Control System
@@ -29,7 +29,7 @@
 - Design BookMyShow
 - Design Pub Sub System like kafka
 
-# Rarely Asked (for freshers) : 
+## Rarely Asked (for freshers) : 
 ### easy
 - Design Cash Dispenser
 - Design Own Notification Engine
