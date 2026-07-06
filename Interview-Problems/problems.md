@@ -3,49 +3,51 @@
 - ✅ Design Parking Lot
 - ✅ Design Tic Tac Toe Game
 - ✅ Design a Snake and Ladder game
-- Design Snake and Food Game
+
 ### medium
-- Design Meeting Scheduler
-- Design Splitwise
 - Design Cache
-- Design an Elevator System
 - Design a Vending Machine
+- Design ATM
+- Design Meeting Scheduler
+
+### hard
+- Design BookMyShow
+- Design Splitwise
+- Design an Elevator System
 
 ## Important (for freshers): 
 ### easy 
-- Design Logging Framework
 - Design Traffic Signal Control System
 - Design a Library Management System
+- Design Own Notification Engine
 
 ### medium
-- Design ATM
+- Design Rate Limiter
+- Design Logging Framework
 - Design Car Rental System
 - Design Inventory Management System
 - Design Online Hotel Booking System
-- Design Rate Limiter
 
 ### hard
+- Design Chess Game
 - LLD of Payment Gateway
-- Design BookMyShow
 - Design Pub Sub System like kafka
 
 ## Rarely Asked (for freshers) : 
 ### easy
+- Design Snake and Food Game
 - Design Cash Dispenser
-- Design Own Notification Engine
+- Design Restaurant Management System
 
 ### medium
 - Design True Caller
 - Design Online Voting System
 - Design Airline Management System
 - Design a Calendar Application
-- Design Community Discussion Platform
-- Design Restaurant Management System
 - Design Bowling Alley Machine
+- Design Cricbuzz
 
 ### hard 
-- Design Cricbuzz
-- Design Chess Game
 - Design Uber
 - Design Spotify
 - Design Zomato
@@ -54,8 +56,12 @@
 - Design Payment System
 - Design Chat system
 - Design Stock Exchange System
+- Design Community Discussion Platform
 
 
+---
+---
+---
 ---
 
 
