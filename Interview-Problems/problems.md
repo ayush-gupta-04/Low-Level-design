@@ -33,8 +33,8 @@
 - (*)Design Spotify
 - (*)Design Pub Sub System like kafka
 - (*)Design Uber
+- (*)Design Zomato
 - Design Chess Game
-- Design Zomato
 - Design LinkedIn
 - Design Amazon
 - Design Chat system
