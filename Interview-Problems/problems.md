@@ -28,7 +28,7 @@
 - Design Cricbuzz
 
 ## Hard:
-- (*)Design BookMyShow
+- (*)Design Movie Ticket Booking System Like BookMyShow
 - (*)Design Splitwise
 - (*)Design Spotify
 - (*)Design Pub Sub System like kafka
