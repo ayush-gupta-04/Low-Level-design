@@ -1,6 +1,6 @@
 ## Easy
 - (*)Design Parking Lot ✅
-- (*)Design LRU Cache
+- (*)Design LRU Cache ✅
 - (*)Design Tic Tac Toe Game
 - (*)Design a Snake and Ladder game
 - (*)Design Traffic Signal Control System
