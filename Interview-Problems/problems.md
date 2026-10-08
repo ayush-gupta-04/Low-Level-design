@@ -10,7 +10,7 @@
 - (*)Design Cash Dispenser
 
 ## Medium : 
-- (*)Design a Vending Machine
+- (*)Design a Vending Machine✅
 - (*)Design an Elevator System
 - (*)Design ATM
 - (*)LLD of Payment Gateway
@@ -28,7 +28,7 @@
 - Design Cricbuzz
 
 ## Hard:
-- (*)Design Movie Ticket Booking System Like BookMyShow
+- (*)Design Movie Ticket Booking System Like BookMyShow ✅
 - (*)Design Splitwise
 - (*)Design Spotify
 - (*)Design Pub Sub System like kafka
