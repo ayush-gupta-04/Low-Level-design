@@ -19,10 +19,10 @@
 - (*)Design Car Rental System
 - (*)Design Inventory Management System
 - (*)Design Online Hotel Booking System
+- (*)Design Airline Management System
 - Design Rate Limiter
 - Design True Caller
 - Design Online Voting System
-- Design Airline Management System
 - Design a Calendar Application
 - Design Bowling Alley Machine
 - Design Cricbuzz
