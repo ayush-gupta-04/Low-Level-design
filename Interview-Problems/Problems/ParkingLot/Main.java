@@ -1,7 +1,5 @@
 import java.util.Optional;
 
-import javax.smartcardio.CardException;
-
 import Parking.ParkingFloor;
 import Parking.ParkingSpot;
 import Parking.ParkingTicket;

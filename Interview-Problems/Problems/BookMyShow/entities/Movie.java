@@ -1,7 +1,5 @@
 package entities;
 
-import java.util.UUID;
-
 import observer.MovieObservable;
 
 public class Movie extends MovieObservable {
