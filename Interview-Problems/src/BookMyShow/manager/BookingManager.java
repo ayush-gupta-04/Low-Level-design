@@ -1,19 +1,24 @@
 package manager;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import entities.Booking;
 import entities.Payment;
 import entities.Show;
 import entities.ShowSeat;
 import entities.User;
+import enums.BookingStatus;
 import enums.PaymentStatus;
 import strategies.PaymentStrategy;
 
 public class BookingManager {
     private static BookingManager instance;
     private final SeatLockManager seatLockMgr;
+    private final Map<String, Booking> bookings = new ConcurrentHashMap<>();
 
     private BookingManager() {
         this.seatLockMgr = SeatLockManager.getInstance();
@@ -52,17 +57,55 @@ public class BookingManager {
                 return Optional.empty();
             }
 
+            String bookingId = UUID.randomUUID().toString();
             // 3. Confirm only if this user still owns every lock (no timeout/race).
-            if (!seatLockMgr.confirmSeats(show, seats, user.getId())) {
-                // Production systems must void/refund the successful payment here.
+            if (!seatLockMgr.confirmSeats(show, seats, user.getId(),bookingId)) {
                 System.out.println("Seat lock expired or ownership changed; booking not confirmed.");
                 return Optional.empty();
             }
 
-            return Optional.of(new Booking(user, show, seats, amount, payment));
+            Booking booking = new Booking(bookingId, user, show, seats, amount, payment);
+            bookings.put(booking.getId(), booking);
+
+            return Optional.of(booking);
+
         } finally {
             // Releases locks on payment failure/exception. After confirmation, locks are already removed.
             seatLockMgr.unlockSeats(show, seats, user.getId());
+        }
+    }
+
+
+    public boolean cancelBooking(String userId, String bookingId) {
+        if (userId == null || bookingId == null) {
+            return false;
+        }
+
+        Booking booking = bookings.get(bookingId);
+
+        if (booking == null || !userId.equals(booking.getUser().getId())) {
+            return false;
+        }
+
+        Show show = booking.getShow();
+
+        synchronized (show) {
+            if (booking.getStatus() != BookingStatus.CONFIRMED) {
+                return false;
+            }
+
+            boolean released = seatLockMgr.releaseBookingSeats(
+                show,
+                booking.getShowSeats(),
+                booking.getId()
+            );
+
+            if (!released) {
+                return false;
+            }
+
+            booking.markCancelled();
+            return true;
         }
     }
 

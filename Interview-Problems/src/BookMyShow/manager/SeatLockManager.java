@@ -13,6 +13,23 @@ import entities.Show;
 import entities.ShowSeat;
 import enums.SeatStatus;
 
+
+/*
+    Lock Seats : 
+    - reqSeats : Copy the seats to an unmodifyiable list.
+    - show level locking
+    - Validate if we can lock seats : 
+        - The seats must be valid and associated with the show.
+        - Seats must be unique.
+    - Seat must be available && Seat must not be in the lockedSeats.
+    - Acquire the locks : 
+        - For every seat, mark status as locked.
+        - Put that seat into the map for that show.
+        - Schedule unlock after some time.
+*/
+
+
+
 public class SeatLockManager {
     private static volatile SeatLockManager instance;
 
@@ -82,7 +99,7 @@ public class SeatLockManager {
     }
 
     /** Confirms seats only if every requested lock is still owned by this user. */
-    public boolean confirmSeats(Show show, List<ShowSeat> seats, String userId) {
+    public boolean confirmSeats(Show show, List<ShowSeat> seats, String userId, String bookingId) {
         if (show == null || seats == null || seats.isEmpty() || userId == null) {
             return false;
         }
@@ -105,6 +122,7 @@ public class SeatLockManager {
 
             // All locks passed validation; now atomically commit the whole set.
             for (ShowSeat showSeat : seats) {
+                showSeat.setBookingId(bookingId);
                 showSeat.setStatus(SeatStatus.BOOKED);
                 showLocks.remove(showSeat);
             }
@@ -140,6 +158,39 @@ public class SeatLockManager {
             if (showLocks.isEmpty()) {
                 lockedSeats.remove(show, showLocks);
             }
+        }
+    }
+
+    // Release the seats if the seats is still owned by the same bookingId.
+    public boolean releaseBookingSeats(
+            Show show,
+            List<ShowSeat> seats,
+            String bookingId) {
+
+        if (show == null || seats == null || seats.isEmpty() || bookingId == null || bookingId.isEmpty()) {
+            return false;
+        }
+
+        synchronized (show) {
+            Set<ShowSeat> uniqueSeats = new HashSet<>();
+
+            // Validate every seat before changing anything.
+            for (ShowSeat seat : seats) {
+                if (!show.ownsShowSeat(seat)
+                        || !uniqueSeats.add(seat)
+                        || seat.getStatus() != SeatStatus.BOOKED
+                        || !bookingId.equals(seat.getBookingId())) {
+                    return false;
+                }
+            }
+
+            // Release all seats together after validation succeeds.
+            for (ShowSeat seat : seats) {
+                seat.setBookingId(null);
+                seat.setStatus(SeatStatus.AVAILABLE);
+            }
+
+            return true;
         }
     }
 

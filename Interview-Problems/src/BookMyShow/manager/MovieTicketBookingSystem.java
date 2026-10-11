@@ -69,11 +69,17 @@ public class MovieTicketBookingSystem {
             .toList();
     }
 
-    public Optional<Booking> bookTickets(String userId, String showId,
-            List<ShowSeat> seats, PaymentStrategy paymentStrategy) {
+
+    // main methods
+    public Optional<Booking> bookTickets(String userId, String showId, List<ShowSeat> seats, PaymentStrategy paymentStrategy) {
         return bookingMgr.createBooking(users.get(userId), shows.get(showId), seats, paymentStrategy);
     }
+    public boolean cancelBooking(String userId, String bookingId) {
+        return bookingMgr.cancelBooking(userId, bookingId);
+    }
 
+
+    // shutdown the executorService.
     public void shutdown() {
         bookingMgr.shutdown();
     }

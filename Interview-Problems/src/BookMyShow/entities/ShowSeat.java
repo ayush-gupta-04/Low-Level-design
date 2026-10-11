@@ -8,10 +8,19 @@ import enums.SeatStatus;
  */
 
 
+/*
+    During confirmation, the SeatLockManager will save the booking ID on every booked ShowSeat.
+    During cancellation, it will clear that ID and restore AVAILABLE.
+    This ownership check is important: you must not free a seat just because a booking happens to reference it. 
+    You must verify that the seat is still booked by that exact booking.
+*/
+
+
 public class ShowSeat {
     private final String showId;
     private final Seat seat;
-    private volatile SeatStatus status;
+    private SeatStatus status;
+    private String bookingId;
 
     public ShowSeat(String showId, Seat seat) {
         this.showId = showId;
@@ -23,6 +32,7 @@ public class ShowSeat {
     public Seat getSeat() { return seat; }
     public String getSeatId() { return seat.getId(); }
     public SeatStatus getStatus() { return status; }
+    public String getBookingId() { return bookingId; }
 
     /**
      * State changes should normally be performed by SeatLockManager while
@@ -30,5 +40,8 @@ public class ShowSeat {
      */
     public void setStatus(SeatStatus status) {
         this.status = status;
+    }
+    public void setBookingId(String bookingId) {
+        this.bookingId = bookingId;
     }
 }
