@@ -27,11 +27,11 @@ public class Main {
         parkingLot.setParkingStrategy(ps);
 
 
-        Vehicle car1 = new Car("car-1", VehicleSize.MEDIUM);
-        Vehicle bike1 = new Car("bike-1", VehicleSize.SMALL);
-        Vehicle bike2 = new Car("bike-2", VehicleSize.SMALL);
-        Vehicle truck1 = new Car("truck-1", VehicleSize.LARGE);
-        Vehicle car2 = new Car("car-2", VehicleSize.MEDIUM);
+        Vehicle car1 = new Car("car-1");
+        Vehicle bike1 = new Car("bike-1");
+        Vehicle bike2 = new Car("bike-2");
+        Vehicle truck1 = new Car("truck-1");
+        Vehicle car2 = new Car("car-2");
 
         Optional<ParkingTicket> t1 = parkingLot.parkVehicle(bike1);
         if(t1.isPresent()){

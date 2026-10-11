@@ -16,25 +16,25 @@ public class ParkingSpot {
         this.parkedVehicle = null;
     }
     
-    public synchronized void parkVehicle(Vehicle vehicle){
-        this.parkedVehicle = vehicle;
-        this.isOccupied = true;
+
+    // we are making the (checking and parking) atomic.
+    public synchronized boolean tryParkVehicle(Vehicle vehicle) {
+        if (vehicle == null ||
+            parkedVehicle != null ||
+            !canFitVehicle(vehicle)) {
+            return false;
+        }
+        parkedVehicle = vehicle;
+        isOccupied = true;
+        return true;
     }
+    // synchronized unpark also.
     public synchronized void unparkVehicle(){
         this.parkedVehicle = null;
         this.isOccupied = false;
     }
     public boolean canFitVehicle(Vehicle vehicle){
-        switch (this.spotSize) {
-            case VehicleSize.SMALL:
-                return vehicle.getSize() == VehicleSize.SMALL;
-            case VehicleSize.MEDIUM:
-                return vehicle.getSize() == VehicleSize.MEDIUM;
-            case VehicleSize.LARGE:
-                return vehicle.getSize() == VehicleSize.LARGE || vehicle.getSize() == VehicleSize.MEDIUM;
-            default:
-                return false;
-        }
+        return vehicle != null && spotSize.canAccommodate(vehicle.getSize());
     }
 
     // getters
@@ -44,10 +44,10 @@ public class ParkingSpot {
     public VehicleSize getSpotSize(){
         return this.spotSize;
     }
-    public boolean isOccupied(){
+    public synchronized boolean isOccupied(){
         return this.isOccupied;
     }
-    public boolean isAvailable(){
+    public synchronized boolean isAvailable(){
         return !this.isOccupied;
     }
 }

@@ -1,7 +1,7 @@
 package Vehicle;
 
 public class Bike extends Vehicle{
-    public Bike(String lisenseNumber, VehicleSize size){
-        super(lisenseNumber, size);
+    public Bike(String lisenseNumber){
+        super(lisenseNumber, VehicleSize.SMALL);
     }
 }

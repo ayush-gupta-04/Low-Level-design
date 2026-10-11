@@ -1,7 +1,7 @@
 package Vehicle;
 
 public class Car extends Vehicle{
-    public Car(String lisenseNumber, VehicleSize size){
-        super(lisenseNumber, size);
+    public Car(String lisenseNumber){
+        super(lisenseNumber, VehicleSize.MEDIUM);
     }
 }

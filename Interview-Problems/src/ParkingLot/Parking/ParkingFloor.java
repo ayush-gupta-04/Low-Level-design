@@ -8,8 +8,8 @@ import java.util.Optional;
 import Vehicle.Vehicle;
 
 public class ParkingFloor {
-    int floorNumber;
-    Map<String, ParkingSpot> spots;
+    private int floorNumber;
+    private Map<String, ParkingSpot> spots;
 
     public ParkingFloor(int floorNumber){
         this.spots = new HashMap<>();
