@@ -82,10 +82,10 @@
     {
       "id": "lOSchzGrswvHQRlqOqKYO",
       "type": "rectangle",
-      "x": 1984.0478432636532,
+      "x": 1815.8736147629265,
       "y": -1422.9824344210047,
-      "width": 670.8382795665829,
-      "height": 493.9770745659488,
+      "width": 927.1038404421141,
+      "height": 500,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -101,8 +101,8 @@
         "type": 3
       },
       "seed": 1331419502,
-      "version": 402,
-      "versionNonce": 832856292,
+      "version": 455,
+      "versionNonce": 240057119,
       "isDeleted": false,
       "boundElements": [
         {
@@ -126,7 +126,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1791311707194,
+      "updated": 1791737068910,
       "created": 1791224553629,
       "link": null,
       "locked": false
@@ -134,9 +134,9 @@
     {
       "id": "NPFwQoEc7yVFF12SKhpWU",
       "type": "text",
-      "x": 1996.0670807031947,
-      "y": -1403.4938971380302,
-      "width": 646.7998046875,
+      "x": 1909.8256814683587,
+      "y": -1400.4824344210047,
+      "width": 739.19970703125,
       "height": 455,
       "angle": 0,
       "strokeColor": "#1e1e1e",
@@ -151,22 +151,22 @@
       "index": "a8",
       "roundness": null,
       "seed": 1018841586,
-      "version": 786,
-      "versionNonce": 584071004,
+      "version": 842,
+      "versionNonce": 811248671,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791311634241,
+      "updated": 1791737076251,
       "created": 1791224556944,
       "link": null,
       "locked": false,
-      "text": "ParkingLot\n--------------------------\ninstance : ParkingLot\nfeeStrategy : ParkingFeeStrategy\nparkingStrategy : ParkingStrategy\nfloors : List<ParkingFloor>\nactiveTickets : Map<String, ParkingTicket>\n-------------------------\nsetFeeStrategy(FeeStrategy) : void\nsetParkingStrategy(ParkingStrategy) : void\naddFloor(ParkingFloor) : void\nparkVehicle(Vechicle) : ParkingTicket\nunparkVehicle(String) : Double",
+      "text": "ParkingLot\n--------------------------\ninstance : ParkingLot\nfeeStrategy : ParkingFeeStrategy\nparkingStrategy : ParkingStrategy\nfloors : List<ParkingFloor>\nactiveTickets : Map<String, ParkingTicket>\n-------------------------\nsetFeeStrategy(FeeStrategy) : void\nsetParkingStrategy(ParkingStrategy) : void\naddFloor(ParkingFloor) : void\nparkVehicle(Vechicle) :  Optional<ParkingTicket>\nunparkVehicle(String) : Optional<Double>",
       "fontSize": 28,
       "baseFontSize": null,
       "fontFamily": 8,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "lOSchzGrswvHQRlqOqKYO",
-      "originalText": "ParkingLot\n--------------------------\ninstance : ParkingLot\nfeeStrategy : ParkingFeeStrategy\nparkingStrategy : ParkingStrategy\nfloors : List<ParkingFloor>\nactiveTickets : Map<String, ParkingTicket>\n-------------------------\nsetFeeStrategy(FeeStrategy) : void\nsetParkingStrategy(ParkingStrategy) : void\naddFloor(ParkingFloor) : void\nparkVehicle(Vechicle) : ParkingTicket\nunparkVehicle(String) : Double",
+      "originalText": "ParkingLot\n--------------------------\ninstance : ParkingLot\nfeeStrategy : ParkingFeeStrategy\nparkingStrategy : ParkingStrategy\nfloors : List<ParkingFloor>\nactiveTickets : Map<String, ParkingTicket>\n-------------------------\nsetFeeStrategy(FeeStrategy) : void\nsetParkingStrategy(ParkingStrategy) : void\naddFloor(ParkingFloor) : void\nparkVehicle(Vechicle) :  Optional<ParkingTicket>\nunparkVehicle(String) : Optional<Double>",
       "autoResize": true,
       "lineHeight": 1.25,
       "labelPosition": null
@@ -833,7 +833,7 @@
       "x": 1137.0035456125552,
       "y": -383.2452454859339,
       "width": 578.8749805537572,
-      "height": 360,
+      "height": 395,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -849,8 +849,8 @@
         "type": 3
       },
       "seed": 446940402,
-      "version": 1307,
-      "versionNonce": 897522140,
+      "version": 1311,
+      "versionNonce": 1979298161,
       "isDeleted": false,
       "boundElements": [
         {
@@ -860,9 +860,13 @@
         {
           "id": "MvUQjzShGArLQmBSzFDWr",
           "type": "arrow"
+        },
+        {
+          "id": "fiWqOFPVJqmBdvIlE_w5P",
+          "type": "arrow"
         }
       ],
-      "updated": 1791311819036,
+      "updated": 1791737029398,
       "created": 1791224689133,
       "link": null,
       "locked": false
@@ -873,7 +877,7 @@
       "x": 1180.0411335456838,
       "y": -378.2452454859339,
       "width": 492.7998046875,
-      "height": 350,
+      "height": 385,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -887,22 +891,22 @@
       "index": "aO",
       "roundness": null,
       "seed": 1323860718,
-      "version": 1500,
-      "versionNonce": 1010501980,
+      "version": 1526,
+      "versionNonce": 105997137,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791311794375,
+      "updated": 1791737019429,
       "created": 1791224691466,
       "link": null,
       "locked": false,
-      "text": "ParkingSpot\n----------------------\nspotId : String\nisOccupied : Boolean\nspotSize : VehicleSize\nparkedVehicle : Vehicle\n--------------------------\nparkVehicle(Vehicle) : void\nunparkVehicle() : void\ncanFitVehicle(Vehicle) : boolean",
+      "text": "ParkingSpot\n----------------------\nspotId : String\nisOccupied : Boolean\nspotSize : VehicleSize\nparkedVehicle : Vehicle\n--------------------------\ntryParkVehicle(Vehicle) : void\nunparkVehicle() : void\nisOccupied() : void\ncanFitVehicle(Vehicle) : boolean",
       "fontSize": 28,
       "baseFontSize": null,
       "fontFamily": 8,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "cm6IBEFf2IAv8QDvYx_Bl",
-      "originalText": "ParkingSpot\n----------------------\nspotId : String\nisOccupied : Boolean\nspotSize : VehicleSize\nparkedVehicle : Vehicle\n--------------------------\nparkVehicle(Vehicle) : void\nunparkVehicle() : void\ncanFitVehicle(Vehicle) : boolean",
+      "originalText": "ParkingSpot\n----------------------\nspotId : String\nisOccupied : Boolean\nspotSize : VehicleSize\nparkedVehicle : Vehicle\n--------------------------\ntryParkVehicle(Vehicle) : void\nunparkVehicle() : void\nisOccupied() : void\ncanFitVehicle(Vehicle) : boolean",
       "autoResize": true,
       "lineHeight": 1.25,
       "labelPosition": null
@@ -1198,10 +1202,10 @@
     {
       "id": "cgfo0twfSkfzAVYxNofKw",
       "type": "arrow",
-      "x": 2319.5340668749013,
-      "y": -1429.8751377870412,
-      "width": 133.27495804226282,
-      "height": 248.7937867979158,
+      "x": 2279.5182453680277,
+      "y": -1429.9591786070512,
+      "width": 173.29077954913646,
+      "height": 248.70974597790587,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1215,11 +1219,11 @@
       "index": "ak",
       "roundness": null,
       "seed": 1183543474,
-      "version": 651,
-      "versionNonce": 1223478756,
+      "version": 704,
+      "versionNonce": 1869872991,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791311627383,
+      "updated": 1791737068910,
       "created": 1791226661569,
       "link": null,
       "locked": false,
@@ -1230,11 +1234,11 @@
         ],
         [
           0,
-          -248.7937867979158
+          -248.70974597790587
         ],
         [
-          133.27495804226282,
-          -248.7937867979158
+          173.29077954913646,
+          -248.70974597790587
         ]
       ],
       "startBinding": {
@@ -1263,10 +1267,10 @@
     {
       "id": "Yxb3eKcmmFWwf3ni6c9Jv",
       "type": "arrow",
-      "x": 2319.5340668749013,
-      "y": -922.1126564890194,
-      "width": 996.2654640161654,
-      "height": 72.06895038730295,
+      "x": 2279.5182453680277,
+      "y": -916.0056902349581,
+      "width": 956.2496425092918,
+      "height": 65.96198413324169,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1280,11 +1284,11 @@
       "index": "al",
       "roundness": null,
       "seed": 2072183726,
-      "version": 604,
-      "versionNonce": 1029796196,
+      "version": 657,
+      "versionNonce": 144358271,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791311627384,
+      "updated": 1791737068910,
       "created": 1791226672077,
       "link": null,
       "locked": false,
@@ -1295,23 +1299,23 @@
         ],
         [
           0,
-          35.58812351063318
+          35.02325581395348
         ],
         [
-          -499.7126939240866,
-          35.58812351063318
+          -543.7839866675763,
+          35.02325581395348
         ],
         [
-          -499.7126939240866,
-          32.068950387302834
+          -543.7839866675763,
+          25.96198413324157
         ],
         [
-          -996.2654640161654,
-          32.068950387302834
+          -956.2496425092918,
+          25.96198413324157
         ],
         [
-          -996.2654640161654,
-          72.06895038730295
+          -956.2496425092918,
+          65.96198413324169
         ]
       ],
       "startBinding": {
@@ -1343,7 +1347,7 @@
       "x": 1323.268602858736,
       "y": -583.0437061017166,
       "width": 103.23032052875328,
-      "height": 189.98027879760087,
+      "height": 189.02573334305544,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1357,11 +1361,11 @@
       "index": "am",
       "roundness": null,
       "seed": 2046337586,
-      "version": 1593,
-      "versionNonce": 1663043420,
+      "version": 1594,
+      "versionNonce": 570201553,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791311783215,
+      "updated": 1791737014444,
       "created": 1791226681823,
       "link": null,
       "locked": false,
@@ -1380,7 +1384,7 @@
         ],
         [
           103.23032052875328,
-          189.98027879760087
+          189.02573334305544
         ]
       ],
       "startBinding": {
@@ -1409,10 +1413,10 @@
     {
       "id": "-D55pCkGD_6OoJ9sXf2Gt",
       "type": "arrow",
-      "x": 2319.5340668749013,
-      "y": -923.005359855056,
-      "width": 44.91299123547651,
-      "height": 273.37985071967466,
+      "x": 2279.5182453680277,
+      "y": -916.9092780854885,
+      "width": 4.897169728602876,
+      "height": 267.2837689501072,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1426,11 +1430,11 @@
       "index": "an",
       "roundness": null,
       "seed": 410807858,
-      "version": 232,
-      "versionNonce": 309699812,
+      "version": 285,
+      "versionNonce": 567604127,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791311627385,
+      "updated": 1791737068910,
       "created": 1791226897742,
       "link": null,
       "locked": false,
@@ -1441,15 +1445,15 @@
         ],
         [
           0,
-          136.6899253598374
+          133.60530630729545
         ],
         [
-          -44.91299123547651,
-          136.6899253598374
+          -4.897169728602876,
+          133.60530630729545
         ],
         [
-          -44.91299123547651,
-          273.37985071967466
+          -4.897169728602876,
+          267.2837689501072
         ]
       ],
       "startBinding": {
@@ -1478,10 +1482,10 @@
     {
       "id": "S7wCKVJKkmCU2E-crJA81",
       "type": "arrow",
-      "x": 2319.5340668749013,
-      "y": -923.005359855056,
-      "width": 833.662892879142,
-      "height": 283.57805398025164,
+      "x": 2279.5182453680277,
+      "y": -916.9092780854885,
+      "width": 873.6787143860156,
+      "height": 277.48197221068415,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1495,11 +1499,11 @@
       "index": "ao",
       "roundness": null,
       "seed": 528564910,
-      "version": 131,
-      "versionNonce": 766994532,
+      "version": 184,
+      "versionNonce": 1666394047,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791311627385,
+      "updated": 1791737068910,
       "created": 1791226899982,
       "link": null,
       "locked": false,
@@ -1510,15 +1514,15 @@
         ],
         [
           0,
-          141.78902699012588
+          138.70440793758394
         ],
         [
-          833.662892879142,
-          141.78902699012588
+          873.6787143860156,
+          138.70440793758394
         ],
         [
-          833.662892879142,
-          283.57805398025164
+          873.6787143860156,
+          277.48197221068415
         ]
       ],
       "startBinding": {
@@ -1698,7 +1702,7 @@
       "version": 80,
       "versionNonce": 1148423772,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1791311472073,
       "created": 1791311470448,
       "link": null,
@@ -1766,8 +1770,8 @@
         "type": 3
       },
       "seed": 1365609572,
-      "version": 221,
-      "versionNonce": 850492644,
+      "version": 223,
+      "versionNonce": 396652927,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1775,11 +1779,11 @@
           "id": "GVU8W0mJSo953DDJDZNmq"
         },
         {
-          "id": "1wJ6pAsBNcgcXvFNot1Ka",
+          "id": "Mzt58m3vI0FDVKlzWdF92",
           "type": "arrow"
         }
       ],
-      "updated": 1791311852448,
+      "updated": 1791737032646,
       "created": 1791311825170,
       "link": null,
       "locked": false
@@ -1807,7 +1811,7 @@
       "version": 128,
       "versionNonce": 1287689052,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1791311844806,
       "created": 1791311828368,
       "link": null,
@@ -1887,7 +1891,7 @@
       "version": 284,
       "versionNonce": 927318364,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1791311848885,
       "created": 1791311844806,
       "link": null,
@@ -1907,10 +1911,10 @@
     {
       "id": "1wJ6pAsBNcgcXvFNot1Ka",
       "type": "arrow",
-      "x": 1230.0647652516877,
-      "y": -73.54556344196044,
-      "width": 299.28339613857713,
-      "height": 104.84380290560196,
+      "x": 1257.398078239969,
+      "y": -43.54556344196044,
+      "width": 326.6167091268584,
+      "height": 134.4753662242936,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1924,11 +1928,11 @@
       "index": "b06",
       "roundness": null,
       "seed": 2033751900,
-      "version": 509,
-      "versionNonce": 694027612,
+      "version": 546,
+      "versionNonce": 244967103,
       "isDeleted": false,
-      "boundElements": null,
-      "updated": 1791311844807,
+      "boundElements": [],
+      "updated": 1791737029399,
       "created": 1791311819037,
       "link": null,
       "locked": false,
@@ -1938,8 +1942,53 @@
           0
         ],
         [
-          -299.28339613857713,
-          -104.84380290560196
+          -326.6167091268584,
+          -134.4753662242936
+        ]
+      ],
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false,
+      "moveMidPointsWithElement": false
+    },
+    {
+      "id": "Mzt58m3vI0FDVKlzWdF92",
+      "type": "arrow",
+      "x": 1254.0647652516877,
+      "y": -80.87887643024169,
+      "width": 323.283396138577,
+      "height": 97.79731094328775,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b06V",
+      "roundness": null,
+      "seed": 958900945,
+      "version": 598,
+      "versionNonce": 1526494559,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1791737032646,
+      "created": 1791737029399,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -323.283396138577,
+          -97.79731094328775
         ]
       ],
       "startBinding": null,
@@ -1959,10 +2008,10 @@
     {
       "id": "fiWqOFPVJqmBdvIlE_w5P",
       "type": "arrow",
-      "x": 1205.9634432941784,
-      "y": -112.7102116229131,
-      "width": 275.1820741810677,
-      "height": 66.33470646185742,
+      "x": 1185.296817317616,
+      "y": -119.65821478683819,
+      "width": 254.51544820450522,
+      "height": 59.38670329793234,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1976,11 +2025,11 @@
       "index": "b07",
       "roundness": null,
       "seed": 758240604,
-      "version": 457,
-      "versionNonce": 40509660,
+      "version": 514,
+      "versionNonce": 285139601,
       "isDeleted": false,
-      "boundElements": null,
-      "updated": 1791311852448,
+      "boundElements": [],
+      "updated": 1791737035712,
       "created": 1791311809664,
       "link": null,
       "locked": false,
@@ -1990,11 +2039,18 @@
           0
         ],
         [
-          -275.1820741810677,
-          -66.33470646185742
+          -254.51544820450522,
+          -59.38670329793234
         ]
       ],
-      "startBinding": null,
+      "startBinding": {
+        "elementId": "cm6IBEFf2IAv8QDvYx_Bl",
+        "mode": "inside",
+        "fixedPoint": [
+          0.08342608218939256,
+          0.6673089384787233
+        ]
+      },
       "endBinding": null,
       "startArrowhead": null,
       "endArrowhead": "arrow",
@@ -2024,7 +2080,7 @@
       "version": 714,
       "versionNonce": 1051068764,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1791311859871,
       "created": 1791311852448,
       "link": null,
