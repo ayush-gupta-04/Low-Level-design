@@ -615,9 +615,9 @@
       "id": "ecMD0-4YWakKwhwgkIlnu",
       "type": "rectangle",
       "x": 200.46507784788218,
-      "y": -659.2561633920935,
+      "y": -680.0096944571648,
       "width": 455.88265261336284,
-      "height": 303.7987302836218,
+      "height": 345.75353106507123,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -633,8 +633,8 @@
         "type": 3
       },
       "seed": 1435145269,
-      "version": 316,
-      "versionNonce": 1848961759,
+      "version": 330,
+      "versionNonce": 54791071,
       "isDeleted": false,
       "boundElements": [
         {
@@ -658,7 +658,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1791703439173,
+      "updated": 1791720968793,
       "created": 1791385643270,
       "link": null,
       "locked": false
@@ -667,9 +667,9 @@
       "id": "VMvu-uDdnB2VQ5En0RFaG",
       "type": "text",
       "x": 228.20648350026673,
-      "y": -647.3567982502826,
+      "y": -664.6329289246291,
       "width": 400.39984130859375,
-      "height": 280,
+      "height": 315,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -683,22 +683,22 @@
       "index": "b0s",
       "roundness": null,
       "seed": 1133536283,
-      "version": 438,
-      "versionNonce": 947056319,
+      "version": 481,
+      "versionNonce": 1998536639,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791701891983,
+      "updated": 1791720968793,
       "created": 1791385644971,
       "link": null,
       "locked": false,
-      "text": "Booking\n-----------------------\nid : String\nuser : User\nshow : Show\nshowSeats : List<ShowSeat>\namount : double\npayment : Payment",
+      "text": "Booking\n-----------------------\nid : String\nuser : User\nshow : Show\nshowSeats : List<ShowSeat>\namount : double\npayment : Payment\nstatus : BookingStatus",
       "fontSize": 28,
       "baseFontSize": null,
       "fontFamily": 8,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "ecMD0-4YWakKwhwgkIlnu",
-      "originalText": "Booking\n-----------------------\nid : String\nuser : User\nshow : Show\nshowSeats : List<ShowSeat>\namount : double\npayment : Payment",
+      "originalText": "Booking\n-----------------------\nid : String\nuser : User\nshow : Show\nshowSeats : List<ShowSeat>\namount : double\npayment : Payment\nstatus : BookingStatus",
       "autoResize": true,
       "lineHeight": 1.25,
       "labelPosition": null
@@ -1206,10 +1206,10 @@
     {
       "id": "GXl4rBEK7V62GR3zmbRuA",
       "type": "rectangle",
-      "x": -490.46555457682973,
-      "y": -2411.7099478304376,
+      "x": -487.50076442467673,
+      "y": -2513.5010613079894,
       "width": 1322.6555368271772,
-      "height": 255,
+      "height": 290,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1225,8 +1225,8 @@
         "type": 3
       },
       "seed": 202789077,
-      "version": 582,
-      "versionNonce": 343427679,
+      "version": 642,
+      "versionNonce": 1923414303,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1246,7 +1246,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1791702052745,
+      "updated": 1791720848572,
       "created": 1791386136742,
       "link": null,
       "locked": false
@@ -1254,10 +1254,10 @@
     {
       "id": "N3FqKMf-Jd2nvevie6DA4",
       "type": "text",
-      "x": -429.7376396788661,
-      "y": -2389.2099478304376,
+      "x": -426.7728495267131,
+      "y": -2508.5010613079894,
       "width": 1201.19970703125,
-      "height": 210,
+      "height": 280,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1271,22 +1271,22 @@
       "index": "b16",
       "roundness": null,
       "seed": 1787180053,
-      "version": 749,
-      "versionNonce": 1021159039,
+      "version": 895,
+      "versionNonce": 1996913983,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791702052746,
+      "updated": 1791720848572,
       "created": 1791386138206,
       "link": null,
       "locked": false,
-      "text": "BookingManager\n-------------------------\ninstance : BookingManager\nseatLockMgr : SeatLockManager\n--------------------------\ncreateBooking(User, Show, List<ShowSeat>, PaymentStrategy) : Optional<Booking>",
+      "text": "BookingManager\n-------------------------\ninstance : BookingManager\nseatLockMgr : SeatLockManager\nbookings : Map<bookingId, Booking> \n--------------------------\ncreateBooking(User, Show, List<ShowSeat>, PaymentStrategy) : Optional<Booking>\ncancelBooking(userId, bookingId) : bool",
       "fontSize": 28,
       "baseFontSize": null,
       "fontFamily": 8,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "GXl4rBEK7V62GR3zmbRuA",
-      "originalText": "BookingManager\n-------------------------\ninstance : BookingManager\nseatLockMgr : SeatLockManager\n--------------------------\ncreateBooking(User, Show, List<ShowSeat>, PaymentStrategy) : Optional<Booking>",
+      "originalText": "BookingManager\n-------------------------\ninstance : BookingManager\nseatLockMgr : SeatLockManager\nbookings : Map<bookingId, Booking> \n--------------------------\ncreateBooking(User, Show, List<ShowSeat>, PaymentStrategy) : Optional<Booking>\ncancelBooking(userId, bookingId) : bool",
       "autoResize": true,
       "lineHeight": 1.25,
       "labelPosition": null
@@ -1546,10 +1546,10 @@
     {
       "id": "rd3vHc1NNWgMYEUJ1w6XA",
       "type": "rectangle",
-      "x": 975.1863198644783,
-      "y": -1964.8111849820593,
-      "width": 1025.6500691903357,
-      "height": 535,
+      "x": 858.571210387054,
+      "y": -1954.9285209821442,
+      "width": 1340.9062093402274,
+      "height": 605,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1565,8 +1565,8 @@
         "type": 3
       },
       "seed": 459094069,
-      "version": 133,
-      "versionNonce": 1000095739,
+      "version": 331,
+      "versionNonce": 1000888415,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1598,7 +1598,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1791405277255,
+      "updated": 1791721070957,
       "created": 1791386465830,
       "link": null,
       "locked": false
@@ -1606,10 +1606,10 @@
     {
       "id": "_b5KHMGle4nZRLLiwrc5l",
       "type": "text",
-      "x": 1064.5115375651148,
-      "y": -1959.8111849820593,
-      "width": 846.9996337890625,
-      "height": 525,
+      "x": 920.7245103696675,
+      "y": -1932.4285209821442,
+      "width": 1216.599609375,
+      "height": 560,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1623,22 +1623,22 @@
       "index": "b1G",
       "roundness": null,
       "seed": 794659733,
-      "version": 817,
-      "versionNonce": 829554075,
+      "version": 1092,
+      "versionNonce": 1591473279,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791405277259,
+      "updated": 1791721070957,
       "created": 1791386468007,
       "link": null,
       "locked": false,
-      "text": "MovieTicketBooingSystem\n-----------------------------------\ninstance : MovieTicketBooingSystem\nmovies : Map<String, Movie>\nshows : Map<String, Show>\nusers : Map<String, User>\ncinemas : Map<String, Cinema>\nbookingMgr : BookingManager\n---------------------------------\nbookTicket(userId, showId, List<Seat>, PaymentStrategy)\naddMovie(Movie) : void\naddUser(User) : void\naddShow(Show) : void\naddCinema(Cinema) : void\nfindShowsInACinema(cinemaId) : List<show> ",
+      "text": "MovieTicketBooingSystem\n-----------------------------------\ninstance : MovieTicketBooingSystem\nmovies : Map<String, Movie>\nshows : Map<String, Show>\nusers : Map<String, User>\ncinemas : Map<String, Cinema>\nbookingMgr : BookingManager\n---------------------------------\nbookTicket(userId, showId, List<ShowSeat>, PaymentStrategy) : Optional<Booking>\ncancelBooking(userId, bookingId) : void\naddMovie(Movie) : void\naddUser(User) : void\naddShow(Show) : void\naddCinema(Cinema) : void\nfindShowsInACinema(cinemaId) : List<show> ",
       "fontSize": 28,
       "baseFontSize": null,
       "fontFamily": 8,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "rd3vHc1NNWgMYEUJ1w6XA",
-      "originalText": "MovieTicketBooingSystem\n-----------------------------------\ninstance : MovieTicketBooingSystem\nmovies : Map<String, Movie>\nshows : Map<String, Show>\nusers : Map<String, User>\ncinemas : Map<String, Cinema>\nbookingMgr : BookingManager\n---------------------------------\nbookTicket(userId, showId, List<Seat>, PaymentStrategy)\naddMovie(Movie) : void\naddUser(User) : void\naddShow(Show) : void\naddCinema(Cinema) : void\nfindShowsInACinema(cinemaId) : List<show> ",
+      "originalText": "MovieTicketBooingSystem\n-----------------------------------\ninstance : MovieTicketBooingSystem\nmovies : Map<String, Movie>\nshows : Map<String, Show>\nusers : Map<String, User>\ncinemas : Map<String, Cinema>\nbookingMgr : BookingManager\n---------------------------------\nbookTicket(userId, showId, List<ShowSeat>, PaymentStrategy) : Optional<Booking>\ncancelBooking(userId, bookingId) : void\naddMovie(Movie) : void\naddUser(User) : void\naddShow(Show) : void\naddCinema(Cinema) : void\nfindShowsInACinema(cinemaId) : List<show> ",
       "autoResize": true,
       "lineHeight": 1.25,
       "labelPosition": null
@@ -1646,10 +1646,10 @@
     {
       "id": "U-zN4QDwjZbRc7uHk7-JU",
       "type": "rectangle",
-      "x": -158.72634885524508,
+      "x": -261.5058011153602,
       "y": -2078.102917837106,
-      "width": 830.1882214898907,
-      "height": 255,
+      "width": 932.9676737500058,
+      "height": 325,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1665,8 +1665,8 @@
         "type": 3
       },
       "seed": 135153237,
-      "version": 142,
-      "versionNonce": 1621317777,
+      "version": 193,
+      "versionNonce": 1674925457,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1682,7 +1682,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1791703280355,
+      "updated": 1791720914503,
       "created": 1791390982146,
       "link": null,
       "locked": false
@@ -1690,10 +1690,10 @@
     {
       "id": "4UQJbn6lcLavMLZYUsJ3m",
       "type": "text",
-      "x": -120.93210383295599,
-      "y": -2073.102917837106,
-      "width": 754.5997314453125,
-      "height": 245,
+      "x": -241.6218177559823,
+      "y": -2055.602917837106,
+      "width": 893.19970703125,
+      "height": 280,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1707,22 +1707,22 @@
       "index": "b1I",
       "roundness": null,
       "seed": 44287707,
-      "version": 421,
-      "versionNonce": 1094453599,
+      "version": 572,
+      "versionNonce": 1922464625,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791703333387,
+      "updated": 1791720914503,
       "created": 1791390983523,
       "link": null,
       "locked": false,
-      "text": "SeatLockManager\n----------------------------------\nlockedSeats : Map<Show, Map<ShowSeat, String>>\n-----------------------------------\nlockSeats(Show, List<ShowSeat>, userId) : bool\nunlockSeat(Show, List<ShowSeat>, userId) : void\nconfirmSeats(Show, List<ShowSeat>, userId) : bool",
+      "text": "SeatLockManager\n----------------------------------\nlockedSeats : Map<Show, Map<ShowSeat, String>>\n-----------------------------------\nlockSeats(Show, List<ShowSeat>, userId) : bool\nunlockSeat(Show, List<ShowSeat>, userId) : void\nconfirmSeats(Show, List<ShowSeat>, userId) : bool\nreleaseBookedSeats(Show, List<ShowSeat>, bookingId) : bool",
       "fontSize": 28,
       "baseFontSize": null,
       "fontFamily": 8,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "U-zN4QDwjZbRc7uHk7-JU",
-      "originalText": "SeatLockManager\n----------------------------------\nlockedSeats : Map<Show, Map<ShowSeat, String>>\n-----------------------------------\nlockSeats(Show, List<ShowSeat>, userId) : bool\nunlockSeat(Show, List<ShowSeat>, userId) : void\nconfirmSeats(Show, List<ShowSeat>, userId) : bool",
+      "originalText": "SeatLockManager\n----------------------------------\nlockedSeats : Map<Show, Map<ShowSeat, String>>\n-----------------------------------\nlockSeats(Show, List<ShowSeat>, userId) : bool\nunlockSeat(Show, List<ShowSeat>, userId) : void\nconfirmSeats(Show, List<ShowSeat>, userId) : bool\nreleaseBookedSeats(Show, List<ShowSeat>, bookingId) : bool",
       "autoResize": true,
       "lineHeight": 1.25,
       "labelPosition": null
@@ -1730,10 +1730,10 @@
     {
       "id": "7mIlSwr9wcUHO18jpDl-5",
       "type": "arrow",
-      "x": 1094.548711450624,
-      "y": -1970.4427639294277,
-      "width": 255.757343027729,
-      "height": 313.74168390100976,
+      "x": 1014.6222621516306,
+      "y": -1961.2969420347758,
+      "width": 172.86610357658253,
+      "height": 407.17511927321357,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1747,11 +1747,11 @@
       "index": "b1M",
       "roundness": null,
       "seed": 1560080629,
-      "version": 418,
-      "versionNonce": 1379705567,
+      "version": 676,
+      "versionNonce": 1439713599,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791702052746,
+      "updated": 1791721070958,
       "created": 1791391200642,
       "link": null,
       "locked": false,
@@ -1762,11 +1762,11 @@
         ],
         [
           0,
-          -313.74168390100976
+          -407.17511927321357
         ],
         [
-          -255.757343027729,
-          -313.74168390100976
+          -172.86610357658253,
+          -407.17511927321357
         ]
       ],
       "startBinding": {
@@ -1795,10 +1795,10 @@
     {
       "id": "BJ3bipzOPlZs7upNw7zeF",
       "type": "arrow",
-      "x": 969.1863198644782,
-      "y": -1881.361636540406,
-      "width": 291.72444722983244,
-      "height": 69.21578129670002,
+      "x": 850.7269782286213,
+      "y": -1860.560340034106,
+      "width": 173.26510559397582,
+      "height": 0.3326867835592111,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1812,11 +1812,11 @@
       "index": "b1N",
       "roundness": null,
       "seed": 140664821,
-      "version": 64,
-      "versionNonce": 727787601,
+      "version": 350,
+      "versionNonce": 631290705,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791703280355,
+      "updated": 1791721078629,
       "created": 1791391208227,
       "link": null,
       "locked": false,
@@ -1826,16 +1826,8 @@
           0
         ],
         [
-          -145.86222361491616,
-          0
-        ],
-        [
-          -145.86222361491616,
-          -69.21578129670002
-        ],
-        [
-          -291.72444722983244,
-          -69.21578129670002
+          -173.26510559397582,
+          0.3326867835592111
         ]
       ],
       "startBinding": {
@@ -1850,8 +1842,8 @@
         "elementId": "U-zN4QDwjZbRc7uHk7-JU",
         "mode": "orbit",
         "fixedPoint": [
-          1.0072272767123005,
-          0.5001
+          1.0064310909893408,
+          0.6703854294971048
         ]
       },
       "startArrowhead": null,
@@ -1864,10 +1856,10 @@
     {
       "id": "vdtu27U3I04a0PKyl3H-D",
       "type": "arrow",
-      "x": 151.16515256946195,
-      "y": -2149.755402375892,
-      "width": 62.04135086582653,
-      "height": 64.69793908424072,
+      "x": 154.12994272161495,
+      "y": -2215.5919703988984,
+      "width": 2.343358986189969,
+      "height": 128.62541619815602,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1881,11 +1873,11 @@
       "index": "b1O",
       "roundness": null,
       "seed": 923353787,
-      "version": 92,
-      "versionNonce": 1721366065,
+      "version": 203,
+      "versionNonce": 1364267825,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791703280356,
+      "updated": 1791720914503,
       "created": 1791391212700,
       "link": null,
       "locked": false,
@@ -1896,15 +1888,15 @@
         ],
         [
           0,
-          32.34896954212036
+          64.78998082635098
         ],
         [
-          62.04135086582653,
-          32.34896954212036
+          2.343358986189969,
+          64.78998082635098
         ],
         [
-          62.04135086582653,
-          64.69793908424072
+          2.343358986189969,
+          128.62541619815602
         ]
       ],
       "startBinding": {
@@ -1933,10 +1925,10 @@
     {
       "id": "eLLt61axZQGHxy0ZO1fuA",
       "type": "arrow",
-      "x": 1777.6689411699294,
-      "y": -1424.179606034691,
-      "width": 113.742186289541,
-      "height": 614.1367157601261,
+      "x": 1907.7145411582942,
+      "y": -1343.5600999295125,
+      "width": 243.78778627790575,
+      "height": 533.5172096549476,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1950,11 +1942,11 @@
       "index": "b1P",
       "roundness": null,
       "seed": 1834504725,
-      "version": 707,
-      "versionNonce": 690839003,
+      "version": 905,
+      "versionNonce": 56238271,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791405277257,
+      "updated": 1791721070957,
       "created": 1791391277276,
       "link": null,
       "locked": false,
@@ -1965,15 +1957,15 @@
         ],
         [
           0,
-          307.25256840637894
+          266.574394301158
         ],
         [
-          -113.742186289541,
-          307.25256840637894
+          -243.78778627790575,
+          266.574394301158
         ],
         [
-          -113.742186289541,
-          614.1367157601261
+          -243.78778627790575,
+          533.5172096549476
         ]
       ],
       "startBinding": {
@@ -2002,10 +1994,10 @@
     {
       "id": "-fNIxyCeYS0iovcfKrQV7",
       "type": "arrow",
-      "x": 1907.725351122462,
-      "y": -1424.179606034691,
-      "width": 213.98711306901055,
-      "height": 494.09487261587583,
+      "x": 2077.74665338495,
+      "y": -1343.5600999295125,
+      "width": 43.96581080652231,
+      "height": 413.4753665106973,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -2019,11 +2011,11 @@
       "index": "b1Q",
       "roundness": null,
       "seed": 614871867,
-      "version": 490,
-      "versionNonce": 85650043,
+      "version": 688,
+      "versionNonce": 1911927007,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791405277257,
+      "updated": 1791721070957,
       "created": 1791391281020,
       "link": null,
       "locked": false,
@@ -2034,11 +2026,11 @@
         ],
         [
           0,
-          494.09487261587583
+          413.4753665106973
         ],
         [
-          213.98711306901055,
-          494.09487261587583
+          43.96581080652231,
+          413.4753665106973
         ]
       ],
       "startBinding": {
@@ -2067,10 +2059,10 @@
     {
       "id": "_U3dRA4XVvyT03gsatOrD",
       "type": "arrow",
-      "x": 969.1863198644782,
-      "y": -1556.2154766021818,
-      "width": 347.28995063952584,
-      "height": 358.8838725561593,
+      "x": 850.7269782286213,
+      "y": -1492.8716918796658,
+      "width": 228.830609003669,
+      "height": 295.5400878336434,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -2084,11 +2076,11 @@
       "index": "b1R",
       "roundness": null,
       "seed": 1937440827,
-      "version": 346,
-      "versionNonce": 820624507,
+      "version": 544,
+      "versionNonce": 48905471,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791405478209,
+      "updated": 1791721070958,
       "created": 1791391285842,
       "link": null,
       "locked": false,
@@ -2098,12 +2090,12 @@
           0
         ],
         [
-          -347.28995063952584,
+          -228.830609003669,
           0
         ],
         [
-          -347.28995063952584,
-          358.8838725561593
+          -228.830609003669,
+          295.5400878336434
         ]
       ],
       "startBinding": {
@@ -2132,10 +2124,10 @@
     {
       "id": "pMxN6ajgFrF6DqdWER-Bk",
       "type": "arrow",
-      "x": 1147.8343783297844,
-      "y": -1424.179606034691,
-      "width": 74.59964092480573,
-      "height": 227.96685134889822,
+      "x": 1084.2864524378024,
+      "y": -1343.5600999295125,
+      "width": 138.14756681678773,
+      "height": 147.3473452437197,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -2149,11 +2141,11 @@
       "index": "b1S",
       "roundness": null,
       "seed": 373184853,
-      "version": 489,
-      "versionNonce": 622380987,
+      "version": 687,
+      "versionNonce": 2042119455,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791405277258,
+      "updated": 1791721070958,
       "created": 1791391289882,
       "link": null,
       "locked": false,
@@ -2164,15 +2156,15 @@
         ],
         [
           0,
-          114.16763620076495
+          73.48946209554401
         ],
         [
-          74.59964092480573,
-          114.16763620076495
+          138.14756681678773,
+          73.48946209554401
         ],
         [
-          74.59964092480573,
-          227.96685134889822
+          138.14756681678773,
+          147.3473452437197
         ]
       ],
       "startBinding": {
@@ -2677,9 +2669,9 @@
       "id": "9A2jnEHHk0P9_J5d65uog",
       "type": "arrow",
       "x": 428.45199241982493,
-      "y": -664.3194755634871,
+      "y": -685.7722533082492,
       "width": 0.4506017249221941,
-      "height": 197.17879514920185,
+      "height": 175.72601740443974,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -2693,11 +2685,11 @@
       "index": "b1b",
       "roundness": null,
       "seed": 1328531003,
-      "version": 118,
-      "versionNonce": 1724169951,
+      "version": 132,
+      "versionNonce": 230617055,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791701891983,
+      "updated": 1791720968794,
       "created": 1791391578210,
       "link": null,
       "locked": false,
@@ -2708,7 +2700,7 @@
         ],
         [
           -0.4506017249221941,
-          -197.17879514920185
+          -175.72601740443974
         ]
       ],
       "startBinding": {
@@ -2738,9 +2730,9 @@
       "id": "1zQs6kk9BdXgKRZS-8t4a",
       "type": "arrow",
       "x": 428.45199241982493,
-      "y": -350.39412093707796,
+      "y": -328.49360454100895,
       "width": 3.0395645011111014,
-      "height": 473.1468189038641,
+      "height": 451.24630250779506,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -2754,11 +2746,11 @@
       "index": "b1e",
       "roundness": null,
       "seed": 700022907,
-      "version": 132,
-      "versionNonce": 1419498271,
+      "version": 146,
+      "versionNonce": 1899207679,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791701891983,
+      "updated": 1791720968794,
       "created": 1791391611786,
       "link": null,
       "locked": false,
@@ -2769,15 +2761,15 @@
         ],
         [
           0,
-          237.04175336623513
+          225.74187182835522
         ],
         [
           3.0395645011111014,
-          237.04175336623513
+          225.74187182835522
         ],
         [
           3.0395645011111014,
-          473.1468189038641
+          451.24630250779506
         ]
       ],
       "startBinding": {
@@ -2807,7 +2799,7 @@
       "id": "ln4VAmymzyoTUBaAtJKJP",
       "type": "arrow",
       "x": 529.9149924356905,
-      "y": -350.39412093707796,
+      "y": -328.49360454100895,
       "width": 1834.255071122466,
       "height": 875.3038903782333,
       "angle": 0,
@@ -2823,11 +2815,11 @@
       "index": "b1f",
       "roundness": null,
       "seed": 1392777941,
-      "version": 397,
-      "versionNonce": 91225201,
+      "version": 412,
+      "versionNonce": 897434655,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791703439174,
+      "updated": 1791720968794,
       "created": 1791391618172,
       "link": null,
       "locked": false,
@@ -2838,15 +2830,15 @@
         ],
         [
           0,
-          408.777057164475
+          386.876540768406
         ],
         [
           1834.255071122466,
-          408.777057164475
+          386.876540768406
         ],
         [
           1834.255071122466,
-          -466.52683321375827
+          -488.4273496098273
         ]
       ],
       "startBinding": {
@@ -2873,11 +2865,11 @@
           "index": 2,
           "start": [
             0,
-            408.777057164475
+            386.876540768406
           ],
           "end": [
             1834.255071122466,
-            408.777057164475
+            386.876540768406
           ]
         }
       ],
@@ -2956,10 +2948,10 @@
     {
       "id": "0HfJiZKLwYfDmrKMyjAqj",
       "type": "arrow",
-      "x": -497.06694074937764,
-      "y": -2267.5951210289622,
-      "width": 226.42555994381826,
-      "height": 529.1183602227611,
+      "x": -494.10215059722464,
+      "y": -2349.605768082782,
+      "width": 229.39035009597126,
+      "height": 611.129007276581,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -2973,11 +2965,11 @@
       "index": "b1h",
       "roundness": null,
       "seed": 198564853,
-      "version": 165,
-      "versionNonce": 236409535,
+      "version": 225,
+      "versionNonce": 2072607103,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791702052746,
+      "updated": 1791720848573,
       "created": 1791391676100,
       "link": null,
       "locked": false,
@@ -2987,12 +2979,12 @@
           0
         ],
         [
-          -226.42555994381826,
+          -229.39035009597126,
           0
         ],
         [
-          -226.42555994381826,
-          529.1183602227611
+          -229.39035009597126,
+          611.129007276581
         ]
       ],
       "startBinding": {
@@ -3765,7 +3757,7 @@
     {
       "id": "uQX24nHv6--nDORQKYIDZ",
       "type": "rectangle",
-      "x": -955.4619873385423,
+      "x": -952.4971971863893,
       "y": -946.3382611891608,
       "width": 560.5717269211378,
       "height": 290,
@@ -3784,8 +3776,8 @@
         "type": 3
       },
       "seed": 1311444511,
-      "version": 526,
-      "versionNonce": 1356364191,
+      "version": 529,
+      "versionNonce": 1479512977,
       "isDeleted": false,
       "boundElements": [
         {
@@ -3801,18 +3793,58 @@
           "type": "arrow"
         }
       ],
-      "updated": 1791703457173,
+      "updated": 1791720928013,
       "created": 1791701212457,
       "link": null,
       "locked": false
     },
     {
+      "id": "HxCJzt4vDLPduk-B4ZvyL",
+      "type": "text",
+      "x": -887.8112482766016,
+      "y": -941.3382611891608,
+      "width": 431.1998291015625,
+      "height": 280,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b1wG",
+      "roundness": null,
+      "seed": 1528040447,
+      "version": 603,
+      "versionNonce": 1864588543,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1791720936763,
+      "created": 1791701214039,
+      "link": null,
+      "locked": false,
+      "text": "ShowSeat\n------------------------\nshowId : String\nseat : Seat\nstatus : SeatStatus\nbookingId : String\n-----------------------\nsetStatus(SeatStatus) : void",
+      "fontSize": 28,
+      "baseFontSize": null,
+      "fontFamily": 8,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "uQX24nHv6--nDORQKYIDZ",
+      "originalText": "ShowSeat\n------------------------\nshowId : String\nseat : Seat\nstatus : SeatStatus\nbookingId : String\n-----------------------\nsetStatus(SeatStatus) : void",
+      "autoResize": true,
+      "lineHeight": 1.25,
+      "labelPosition": null
+    },
+    {
       "id": "V9Z0ZCWNybdbAtOy4mnu2",
       "type": "arrow",
       "x": 194.46507784788216,
-      "y": -571.6543468249841,
-      "width": 583.3553382652866,
-      "height": 229.65491436417665,
+      "y": -580.3100104673215,
+      "width": 580.3905481131336,
+      "height": 220.9992507218393,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -3826,11 +3858,11 @@
       "index": "b1wV",
       "roundness": null,
       "seed": 381893525,
-      "version": 785,
-      "versionNonce": 47001489,
+      "version": 805,
+      "versionNonce": 445507647,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1791703464988,
+      "updated": 1791720968794,
       "created": 1791391603020,
       "link": null,
       "locked": false,
@@ -3845,11 +3877,11 @@
         ],
         [
           -269.7956352677229,
-          -229.65491436417665
+          -220.9992507218393
         ],
         [
-          -583.3553382652866,
-          -229.65491436417665
+          -580.3905481131336,
+          -220.9992507218393
         ]
       ],
       "startBinding": {
@@ -3880,7 +3912,7 @@
           ],
           "end": [
             -269.7956352677229,
-            -229.65491436417665
+            -220.9992507218393
           ]
         }
       ],
@@ -3888,51 +3920,11 @@
       "endIsSpecial": false
     },
     {
-      "id": "HxCJzt4vDLPduk-B4ZvyL",
-      "type": "text",
-      "x": -890.7760384287546,
-      "y": -923.8382611891608,
-      "width": 431.1998291015625,
-      "height": 245,
-      "angle": 0,
-      "strokeColor": "#1e1e1e",
-      "backgroundColor": "transparent",
-      "fillStyle": "solid",
-      "strokeWidth": 2,
-      "strokeStyle": "solid",
-      "roughness": 1,
-      "opacity": 100,
-      "groupIds": [],
-      "frameId": null,
-      "index": "b1x",
-      "roundness": null,
-      "seed": 1528040447,
-      "version": 580,
-      "versionNonce": 1678425265,
-      "isDeleted": false,
-      "boundElements": null,
-      "updated": 1791703434232,
-      "created": 1791701214039,
-      "link": null,
-      "locked": false,
-      "text": "ShowSeat\n------------------------\nshowId : String\nseat : Seat\nstatus : SeatStatus\n-----------------------\nsetStatus(SeatStatus) : void",
-      "fontSize": 28,
-      "baseFontSize": null,
-      "fontFamily": 8,
-      "textAlign": "center",
-      "verticalAlign": "middle",
-      "containerId": "uQX24nHv6--nDORQKYIDZ",
-      "originalText": "ShowSeat\n------------------------\nshowId : String\nseat : Seat\nstatus : SeatStatus\n-----------------------\nsetStatus(SeatStatus) : void",
-      "autoResize": true,
-      "lineHeight": 1.25,
-      "labelPosition": null
-    },
-    {
       "id": "aSeF_0jyoJG-xuzB4hU0p",
       "type": "arrow",
       "x": 251.03780704321056,
       "y": -932.9205101088168,
-      "width": 639.928067460615,
+      "width": 636.963277308462,
       "height": 93.49038667189984,
       "angle": 0,
       "strokeColor": "#1e1e1e",
@@ -3947,11 +3939,11 @@
       "index": "b1y",
       "roundness": null,
       "seed": 1548641503,
-      "version": 85,
-      "versionNonce": 709234609,
+      "version": 88,
+      "versionNonce": 1202458929,
       "isDeleted": false,
-      "boundElements": null,
-      "updated": 1791703461890,
+      "boundElements": [],
+      "updated": 1791720928013,
       "created": 1791703455827,
       "link": null,
       "locked": false,
@@ -3961,15 +3953,15 @@
           0
         ],
         [
-          -319.9640337303075,
+          -318.481638654231,
           0
         ],
         [
-          -319.9640337303075,
+          -318.481638654231,
           93.49038667189984
         ],
         [
-          -639.928067460615,
+          -636.963277308462,
           93.49038667189984
         ]
       ],
@@ -3995,6 +3987,82 @@
       "fixedSegments": null,
       "startIsSpecial": null,
       "endIsSpecial": null
+    },
+    {
+      "id": "0RcMxEbl0s4WbbTJImxA1",
+      "type": "rectangle",
+      "x": 2776.060904323607,
+      "y": -611.9032154137269,
+      "width": 364.63875991113923,
+      "height": 185,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b1z",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1623325393,
+      "version": 259,
+      "versionNonce": 1042623967,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "f7RuN_PtYe-m5Zs_pEIei"
+        }
+      ],
+      "updated": 1791721134815,
+      "created": 1791721099879,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "f7RuN_PtYe-m5Zs_pEIei",
+      "type": "text",
+      "x": 2842.8803300555437,
+      "y": -589.4032154137269,
+      "width": 230.99990844726562,
+      "height": 140,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b20",
+      "roundness": null,
+      "seed": 1917663249,
+      "version": 328,
+      "versionNonce": 1981946367,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1791721134815,
+      "created": 1791721100860,
+      "link": null,
+      "locked": false,
+      "text": "BookingStatus\n---------------\nCONFIRM\nCANCELLED",
+      "fontSize": 28,
+      "baseFontSize": null,
+      "fontFamily": 8,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "0RcMxEbl0s4WbbTJImxA1",
+      "originalText": "BookingStatus\n---------------\nCONFIRM\nCANCELLED",
+      "autoResize": true,
+      "lineHeight": 1.25,
+      "labelPosition": null
     }
   ],
   "appState": {
