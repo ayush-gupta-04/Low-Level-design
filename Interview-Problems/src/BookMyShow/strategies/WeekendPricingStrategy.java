@@ -1,16 +1,17 @@
 package strategies;
 
 import java.util.List;
-import entities.Seat;
+import entities.ShowSeat;
 
 public class WeekendPricingStrategy implements PricingStrategy {
-    final double WEEKEND_TAX_PERCENT = 20.0;
+    private static final double WEEKEND_TAX_PERCENT = 20.0;
 
-    public double calcPrice(List<Seat> seats){
+    @Override
+    public double calcPrice(List<ShowSeat> seats) {
         double price = 0.0;
-        for(Seat s : seats){
-            price += s.getType().getPrice();
+        for (ShowSeat showSeat : seats) {
+            price += showSeat.getSeat().getType().getPrice();
         }
-        return price + (price/100.0)*WEEKEND_TAX_PERCENT;
+        return price + (price / 100.0) * WEEKEND_TAX_PERCENT;
     }
 }

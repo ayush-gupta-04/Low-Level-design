@@ -16,6 +16,7 @@ public class Screen {
         seats.add(seat);
     }
 
+    // getters & setters
     public String getId() { return id; }
     public List<Seat> getSeats() { return seats; }
 }

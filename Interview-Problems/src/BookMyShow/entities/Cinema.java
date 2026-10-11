@@ -21,6 +21,8 @@ public class Cinema {
         screens.add(screen);
     }
 
+
+    // getters & setters
     public String getId() { return id; }
     public String getName() { return name; }
     public String getCity() { return city; }

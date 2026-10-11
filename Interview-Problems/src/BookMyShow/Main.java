@@ -1,105 +1,109 @@
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import entities.Booking;
 import entities.Cinema;
 import entities.Movie;
+import entities.Payment;
 import entities.Screen;
 import entities.Seat;
 import entities.Show;
+import entities.ShowSeat;
 import entities.User;
+import enums.PaymentStatus;
 import enums.SeatStatus;
 import enums.SeatType;
 import manager.MovieTicketBookingSystem;
 import observer.UserObserver;
-import strategies.CreditCardPaymentStrategy;
+import strategies.PaymentStrategy;
 import strategies.WeekdaysPricingStrategy;
 
 public class Main {
     public static void main(String[] args) {
         MovieTicketBookingSystem service = MovieTicketBookingSystem.getInstance();
 
-        // 1. Add movies
+        // 1. Add movie and cinema.
         Movie matrix = service.addMovie("M1", "The Matrix", 120);
-
-        // 2. Add cinema.
         Cinema pvr = service.addCinema("pvr-1", "PVR-Ranchi", "Ranchi");
 
-        // 3. Add Seats for a Screen
+        // 2. Create the physical seats for a screen.
         Screen screen1 = new Screen("S1");
         for (int i = 1; i <= 10; i++) {
             screen1.addSeat(new Seat("A" + i, 1, i, SeatType.SILVER));
-            screen1.addSeat(new Seat("B" + i, 2, i, i <= 5 ? SeatType.SILVER : SeatType.PLATINUM));
-            screen1.addSeat(new Seat("C" + i, 2, i, i <= 5 ? SeatType.PLATINUM : SeatType.GOLD));
+            screen1.addSeat(new Seat("B" + i, 2, i,
+                i <= 5 ? SeatType.SILVER : SeatType.PLATINUM));
+            screen1.addSeat(new Seat("C" + i, 3, i,
+                i <= 5 ? SeatType.PLATINUM : SeatType.GOLD));
         }
         pvr.addScreen(screen1);
 
+        // 3. Two shows share the same screen and physical Seat objects.
+        //    Each Show creates its own ShowSeat inventory records.
+        Show afternoonShow = service.addShow(
+            "show1", matrix, pvr, screen1, new WeekdaysPricingStrategy());
+        Show eveningShow = service.addShow(
+            "show2", matrix, pvr, screen1, new WeekdaysPricingStrategy());
 
-        // 4. add shows.
-        Show matrixShow = service.addShow("show1", matrix, pvr, screen1, new WeekdaysPricingStrategy());
-
-
-
-        // --- User and Observer Setup ---
-        // add user.
+        // User and observer setup.
         User alice = service.addUser("Alice", "alice@example.com");
         UserObserver aliceObserver = new UserObserver(alice);
         matrix.addObserver(aliceObserver);
 
-        // Simulate movie release
         System.out.println("\n--- Notifying Observers about Movie Release ---");
         matrix.notifyObservers();
 
+        // 4. Find available inventory for the selected show.
+        Show selectedShow = afternoonShow;
+        List<ShowSeat> availableSeats = selectedShow.getShowSeats().stream()
+            .filter(showSeat -> showSeat.getStatus() == SeatStatus.AVAILABLE)
+            .toList();
 
-        // booking flow.
-        System.out.println("\n--- Alice's Booking Flow ---");
+        System.out.println("\nAvailable seats for " + selectedShow.getId() + ": ");
+        System.out.println(availableSeats.stream().map(ShowSeat::getSeatId).toList());
 
-        // 1. Search for shows
-        List<Show> shows = service.findShowsInCinema(pvr);
-        if(shows.isEmpty()){
-            System.out.println("No shows in : " + pvr.getCity() + " " + pvr.getName());
-        }
-        Show selectedShow = shows.get(0);
-
-
-        // 2. View available seats
-        List<Seat> availableSeats = selectedShow.getScreen().getSeats().stream()
-        .filter(seat -> seat.getStatus()==SeatStatus.AVAILABLE)
-        .toList();
-        
-        System.out.println("Available seats are ... ");
-        System.out.println(availableSeats.stream().map(seat -> seat.getId()).toList());
-
-        // 3. select seats
-        List<Seat> desiredSeats = List.of(availableSeats.get(2), availableSeats.get(3));
-        System.out.println("Alice selects seats: " + desiredSeats.stream().map(seat -> seat.getId()).toList());
-
-
-        // 4. Book Tickets
-        Optional<Booking> bookingOpt = service.bookTickets(
-                alice.getId(),
-                selectedShow.getId(),
-                desiredSeats,
-                new CreditCardPaymentStrategy()
+        // Select A1 and A2 from this show's own ShowSeat inventory.
+        List<ShowSeat> desiredSeats = List.of(
+            selectedShow.getShowSeatBySeatId("A1"),
+            selectedShow.getShowSeatBySeatId("A2")
         );
+        System.out.println("Alice selects seats: "
+            + desiredSeats.stream().map(ShowSeat::getSeatId).toList());
 
-        
+        // 5. Book tickets.
+        // Use deterministic success in the demo so the BOOKED vs AVAILABLE
+        // distinction is visible every time. The random simulator remains available
+        // in CreditCardPaymentStrategy for payment-failure flows.
+        PaymentStrategy demoPayment = amount -> new Payment(
+            amount, PaymentStatus.SUCCESS, "DEMO_TXN_" + UUID.randomUUID());
+        Optional<Booking> bookingOpt = service.bookTickets(
+            alice.getId(), selectedShow.getId(), desiredSeats, demoPayment);
+
         if (bookingOpt.isPresent()) {
             Booking booking = bookingOpt.get();
             System.out.println("\n--- Booking Successful! ---");
             System.out.println("Booking ID: " + booking.getId());
             System.out.println("User: " + booking.getUser().getName());
             System.out.println("Movie: " + booking.getShow().getMovie().getName());
-            System.out.println("Seats: " + booking.getSeats().stream().map(s -> s.getId()).toList());
+            System.out.println("Seats: "
+                + booking.getShowSeats().stream().map(ShowSeat::getSeatId).toList());
             System.out.println("Total Amount: $" + booking.getAmount());
             System.out.println("Payment Status: " + booking.getPayment().getStatus());
         } else {
             System.out.println("Booking failed.");
         }
 
-        // 5. Verify seat status after booking
-        System.out.println("\nSeat status after Alice's booking:");
-        desiredSeats.forEach(seat -> System.out.printf("Seat %s status: %s%n", seat.getId(), seat.getStatus()));
+        // 6. Verify the same physical seat has independent state in each show.
+        System.out.println("\nSeat status in afternoon show:");
+        desiredSeats.forEach(showSeat -> System.out.printf(
+            "Seat %s status: %s%n", showSeat.getSeatId(), showSeat.getStatus()));
+
+        System.out.println("\nSeat status in evening show (same physical seats):");
+        desiredSeats.forEach(afternoonSeat -> {
+            ShowSeat eveningSeat = eveningShow.getShowSeat(afternoonSeat.getSeat());
+            System.out.printf("Seat %s status: %s%n",
+                eveningSeat.getSeatId(), eveningSeat.getStatus());
+        });
 
         service.shutdown();
     }

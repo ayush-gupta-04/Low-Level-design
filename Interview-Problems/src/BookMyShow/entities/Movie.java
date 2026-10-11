@@ -13,6 +13,7 @@ public class Movie extends MovieObservable {
         this.duration = duration;
     }
 
+    // getters & setters
     public String getId() {return id;}
     public String getName() {return name;}
     public int getDuration() {return duration;}

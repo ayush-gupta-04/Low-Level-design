@@ -1,8 +1,8 @@
 package strategies;
 
 import java.util.List;
-import entities.Seat;
+import entities.ShowSeat;
 
 public interface PricingStrategy {
-    public double calcPrice(List<Seat> seats);
-} 
+    double calcPrice(List<ShowSeat> seats);
+}

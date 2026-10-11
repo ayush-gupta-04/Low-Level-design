@@ -1,13 +1,14 @@
 package strategies;
 
 import java.util.List;
-import entities.Seat;
+import entities.ShowSeat;
 
-public class WeekdaysPricingStrategy implements PricingStrategy{
-    public double calcPrice(List<Seat> seats){
+public class WeekdaysPricingStrategy implements PricingStrategy {
+    @Override
+    public double calcPrice(List<ShowSeat> seats) {
         double price = 0.0;
-        for(Seat s : seats){
-            price += s.getType().getPrice();
+        for (ShowSeat showSeat : seats) {
+            price += showSeat.getSeat().getType().getPrice();
         }
         return price;
     }

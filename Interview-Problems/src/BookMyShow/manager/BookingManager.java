@@ -5,55 +5,68 @@ import java.util.Optional;
 
 import entities.Booking;
 import entities.Payment;
-import entities.Seat;
 import entities.Show;
+import entities.ShowSeat;
 import entities.User;
 import enums.PaymentStatus;
 import strategies.PaymentStrategy;
 
 public class BookingManager {
     private static BookingManager instance;
-    SeatLockManager seatLockMgr;
+    private final SeatLockManager seatLockMgr;
 
-    private BookingManager(){
+    private BookingManager() {
         this.seatLockMgr = SeatLockManager.getInstance();
     }
 
-    public static BookingManager getInstance(){
-        if(BookingManager.instance == null){
-            synchronized (BookingManager.class){
-                if(BookingManager.instance == null){
-                    BookingManager.instance = new BookingManager();
+    public static BookingManager getInstance() {
+        if (instance == null) {
+            synchronized (BookingManager.class) {
+                if (instance == null) {
+                    instance = new BookingManager();
                 }
             }
-            
         }
-        return BookingManager.instance;
+        return instance;
     }
 
-    public Optional<Booking> createBooking(User user, Show show, List<Seat> seats, PaymentStrategy paymentStrategy){
-        // 1. Lock the seats;
-        seatLockMgr.lockSeats(show, seats, user.getId());
+    public Optional<Booking> createBooking(User user, Show show, List<ShowSeat> seats, PaymentStrategy paymentStrategy) {
 
-        // process payment.
-        // 2. calculate total payable amount.
-        double amount = show.getPricingStrategy().calcPrice(seats);
-        // 3. process payment;
-        Payment payment = paymentStrategy.pay(amount);
-
-        if(payment.getStatus() == PaymentStatus.SUCCESS){
-            Booking booking = new Booking(user, show, seats, amount, payment);
-            booking.confirmBooking();
-            seatLockMgr.unlockSeats(show, seats, user.getId());
-            return Optional.of(booking);
-        }else{
-            System.out.println("Payment Failed!");
+        if (user == null || show == null || seats == null || paymentStrategy == null) {
             return Optional.empty();
         }
+
+        // 1. Reserve inventory before taking payment.
+        if (!seatLockMgr.lockSeats(show, seats, user.getId())) {
+            System.out.println("Could not lock the requested seats.");
+            return Optional.empty();
+        }
+
+        try {
+            // 2. Calculate the price and process payment.
+            double amount = show.getPricingStrategy().calcPrice(seats);
+            Payment payment = paymentStrategy.pay(amount);
+            
+            if (payment == null || payment.getStatus() != PaymentStatus.SUCCESS) {
+                System.out.println("Payment failed; releasing seat locks.");
+                return Optional.empty();
+            }
+
+            // 3. Confirm only if this user still owns every lock (no timeout/race).
+            if (!seatLockMgr.confirmSeats(show, seats, user.getId())) {
+                // Production systems must void/refund the successful payment here.
+                System.out.println("Seat lock expired or ownership changed; booking not confirmed.");
+                return Optional.empty();
+            }
+
+            return Optional.of(new Booking(user, show, seats, amount, payment));
+        } finally {
+            // Releases locks on payment failure/exception. After confirmation, locks are already removed.
+            seatLockMgr.unlockSeats(show, seats, user.getId());
+        }
     }
 
-
-    public void shutdown(){
+    public void shutdown() {
         seatLockMgr.shutdown();
     }
 }

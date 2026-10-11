@@ -16,6 +16,8 @@ public class Payment {
         this.tnxId = transactionId;
     }
 
+
+    // getters & setters
     public String getId() { return id; }
     public PaymentStatus getStatus() { return status; }
     public double getAmount() { return amount; }
