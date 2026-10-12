@@ -1,6 +1,6 @@
-package entities;
+package BookMyShow.entities;
 
-import enums.SeatStatus;
+import BookMyShow.enums.SeatStatus;
 
 /**
  * A physical seat's booking state for one particular show.

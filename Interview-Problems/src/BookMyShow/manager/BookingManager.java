@@ -1,19 +1,22 @@
-package manager;
+package BookMyShow.manager;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import entities.Booking;
-import entities.Payment;
-import entities.Show;
-import entities.ShowSeat;
-import entities.User;
-import enums.BookingStatus;
-import enums.PaymentStatus;
-import strategies.PaymentStrategy;
+import BookMyShow.entities.Booking;
+import BookMyShow.entities.Payment;
+import BookMyShow.entities.Show;
+import BookMyShow.entities.ShowSeat;
+import BookMyShow.entities.User;
+import BookMyShow.enums.BookingStatus;
+import BookMyShow.enums.PaymentStatus;
+import BookMyShow.enums.SeatStatus;
+import BookMyShow.strategies.PaymentStrategy;
 
 public class BookingManager {
     private static BookingManager instance;
@@ -94,7 +97,7 @@ public class BookingManager {
                 return false;
             }
 
-            boolean released = seatLockMgr.releaseBookingSeats(
+            boolean released = releaseBookingSeats(
                 show,
                 booking.getShowSeats(),
                 booking.getId()
@@ -105,6 +108,39 @@ public class BookingManager {
             }
 
             booking.markCancelled();
+            return true;
+        }
+    }
+
+    // Release the seats if the seats is still owned by the same bookingId.
+    public boolean releaseBookingSeats(
+            Show show,
+            List<ShowSeat> seats,
+            String bookingId) {
+
+        if (show == null || seats == null || seats.isEmpty() || bookingId == null || bookingId.isEmpty()) {
+            return false;
+        }
+
+        synchronized (show) {
+            Set<ShowSeat> uniqueSeats = new HashSet<>();
+
+            // Validate every seat before changing anything.
+            for (ShowSeat seat : seats) {
+                if (!show.ownsShowSeat(seat)
+                        || !uniqueSeats.add(seat)
+                        || seat.getStatus() != SeatStatus.BOOKED
+                        || !bookingId.equals(seat.getBookingId())) {
+                    return false;
+                }
+            }
+
+            // Release all seats together after validation succeeds.
+            for (ShowSeat seat : seats) {
+                seat.setBookingId(null);
+                seat.setStatus(SeatStatus.AVAILABLE);
+            }
+
             return true;
         }
     }

@@ -1,9 +1,10 @@
-package vendingmachine;
-import entities.Coin;
-import entities.Inventory;
-import entities.Item;
-import state.IdleState;
-import state.VendingMachineState;
+package VendingMachine.vendingmachine;
+
+import VendingMachine.state.IdleState;
+import VendingMachine.state.VendingMachineState;
+import VendingMachine.entities.Coin;
+import VendingMachine.entities.Inventory;
+import VendingMachine.entities.Item;
 
 public class VendingMachine {
     VendingMachineState currentState;

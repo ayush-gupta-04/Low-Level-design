@@ -1,6 +1,6 @@
-package entities;
+package BookMyShow.entities;
 
-import observer.MovieObservable;
+import BookMyShow.observer.MovieObservable;
 
 public class Movie extends MovieObservable {
     String id;

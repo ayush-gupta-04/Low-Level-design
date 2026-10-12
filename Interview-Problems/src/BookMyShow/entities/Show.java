@@ -1,11 +1,11 @@
-package entities;
+package BookMyShow.entities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import strategies.PricingStrategy;
+import BookMyShow.strategies.PricingStrategy;
 
 public class Show {
     private final String id;
@@ -53,7 +53,5 @@ public class Show {
     public PricingStrategy getPricingStrategy() { return pricingStrategy; }
     public Cinema getCinema() { return cinema; }
     public List<ShowSeat> getShowSeats() {return new ArrayList<>(seatIdToShowSeat.values());}
-    public ShowSeat getShowSeatBySeatId(String seatId) {
-        return seatIdToShowSeat.get(seatId);
-    }
+    public ShowSeat getShowSeatBySeatId(String seatId) { return seatIdToShowSeat.get(seatId);}
 }

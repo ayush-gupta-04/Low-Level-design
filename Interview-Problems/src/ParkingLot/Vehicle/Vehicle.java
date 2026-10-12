@@ -1,4 +1,4 @@
-package Vehicle;
+package ParkingLot.Vehicle;
 
 public abstract class Vehicle {
     VehicleSize size;

@@ -1,8 +1,8 @@
-package entities;
+package BookMyShow.entities;
 
 import java.util.List;
 
-import enums.BookingStatus;
+import BookMyShow.enums.BookingStatus;
 
 public class Booking {
     private final String id;

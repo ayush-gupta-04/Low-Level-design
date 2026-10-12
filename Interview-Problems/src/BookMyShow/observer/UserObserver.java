@@ -1,7 +1,7 @@
-package observer;
+package BookMyShow.observer;
 
-import entities.Movie;
-import entities.User;
+import BookMyShow.entities.Movie;
+import BookMyShow.entities.User;
 
 public class UserObserver implements MovieObserver {
     private User user;

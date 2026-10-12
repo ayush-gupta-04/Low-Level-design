@@ -24,20 +24,20 @@
    - Each seat can be booked by only one user for a particular show.
    - Seats temporarily locked by another user should not be available for booking.
 
-5. Booking Management
+5. **Booking Management**
 - Users should be able to select one or multiple seats for a show.
 - The system should lock selected seats temporarily before payment.
 - A booking should be created with booking ID, user, show, selected seats, amount, and booking status.
 - The booking should be confirmed only after successful payment and successful seat confirmation.
 - Users should be able to cancel eligible bookings.
 
-6. Payment Management
+6. **Payment Management**
 - The system should support payment for a booking.
 - Payment should have a unique payment ID, amount, payment method, and payment status.
 - A booking should not be confirmed if payment fails.
 - The system should handle payment failures and refunds for eligible cancellations.
 
-7. Seat Locking and Concurrency
+7. **Seat Locking and Concurrency**
 - Multiple users may attempt to book the same seat simultaneously.
 - The system must prevent two users from booking the same seat for the same show.
 - Seat locking should be atomic for all selected seats.
@@ -45,7 +45,7 @@
 - Only the user who owns a lock should be able to confirm the corresponding seats.
 - If a booking fails or the lock expires, the seats should become available again, provided they have not been booked.
 
-8. Pricing Management
+8. **Pricing Management**
 - The system should calculate the booking amount based on the selected seats.
 - Different seat categories may have different prices.
 - The system should support extensible pricing strategies, such as weekday and weekend pricing.

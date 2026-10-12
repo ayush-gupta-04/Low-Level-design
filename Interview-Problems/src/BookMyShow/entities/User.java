@@ -1,4 +1,4 @@
-package entities;
+package BookMyShow.entities;
 
 import java.util.UUID;
 

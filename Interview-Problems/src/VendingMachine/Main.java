@@ -1,5 +1,7 @@
-import entities.Coin;
-import vendingmachine.VendingMachine;
+package VendingMachine;
+
+import VendingMachine.entities.Coin;
+import VendingMachine.vendingmachine.VendingMachine;
 
 public class Main {
     public static void main(String[] args) {

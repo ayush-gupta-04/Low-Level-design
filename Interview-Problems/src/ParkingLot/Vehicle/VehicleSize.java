@@ -1,4 +1,4 @@
-package Vehicle;
+package ParkingLot.Vehicle;
 
 public enum VehicleSize {
     SMALL(1),

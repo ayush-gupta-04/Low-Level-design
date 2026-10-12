@@ -1,4 +1,4 @@
-package entities;
+package VendingMachine.entities;
 
 
 public class Item {

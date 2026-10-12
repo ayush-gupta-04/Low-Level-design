@@ -1,8 +1,9 @@
-package observer;
+package BookMyShow.observer;
 
 import java.util.ArrayList;
 import java.util.List;
-import entities.Movie;
+
+import BookMyShow.entities.Movie;
 
 public class MovieObservable {
     List<MovieObserver> observers;

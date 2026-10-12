@@ -1,7 +1,7 @@
-package Vehicle;
+package ParkingLot.Vehicle;
 
 public class Truck extends Vehicle{
-    public Truck(String lisenseNumber, VehicleSize size){
+    public Truck(String lisenseNumber){
         super(lisenseNumber, VehicleSize.LARGE);
     }
 }

@@ -1,4 +1,4 @@
-package manager;
+package BookMyShow.manager;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,10 +9,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import entities.Show;
-import entities.ShowSeat;
-import enums.SeatStatus;
-
+import BookMyShow.entities.Show;
+import BookMyShow.entities.ShowSeat;
+import BookMyShow.enums.SeatStatus;
 
 /*
     Lock Seats : 
@@ -158,39 +157,6 @@ public class SeatLockManager {
             if (showLocks.isEmpty()) {
                 lockedSeats.remove(show, showLocks);
             }
-        }
-    }
-
-    // Release the seats if the seats is still owned by the same bookingId.
-    public boolean releaseBookingSeats(
-            Show show,
-            List<ShowSeat> seats,
-            String bookingId) {
-
-        if (show == null || seats == null || seats.isEmpty() || bookingId == null || bookingId.isEmpty()) {
-            return false;
-        }
-
-        synchronized (show) {
-            Set<ShowSeat> uniqueSeats = new HashSet<>();
-
-            // Validate every seat before changing anything.
-            for (ShowSeat seat : seats) {
-                if (!show.ownsShowSeat(seat)
-                        || !uniqueSeats.add(seat)
-                        || seat.getStatus() != SeatStatus.BOOKED
-                        || !bookingId.equals(seat.getBookingId())) {
-                    return false;
-                }
-            }
-
-            // Release all seats together after validation succeeds.
-            for (ShowSeat seat : seats) {
-                seat.setBookingId(null);
-                seat.setStatus(SeatStatus.AVAILABLE);
-            }
-
-            return true;
         }
     }
 

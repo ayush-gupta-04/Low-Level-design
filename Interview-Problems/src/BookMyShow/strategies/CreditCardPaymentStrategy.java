@@ -1,9 +1,9 @@
-package strategies;
+package BookMyShow.strategies;
 
 import java.util.UUID;
 
-import entities.Payment;
-import enums.PaymentStatus;
+import BookMyShow.entities.Payment;
+import BookMyShow.enums.PaymentStatus;
 
 public class CreditCardPaymentStrategy implements PaymentStrategy{
     public Payment pay(double amount){

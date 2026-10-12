@@ -1,18 +1,19 @@
-package Parking;
+package ParkingLot.Parking;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
-import Vehicle.Vehicle;
+import ParkingLot.Vehicle.Vehicle;
+
 
 public class ParkingFloor {
     private int floorNumber;
     private Map<String, ParkingSpot> spots;
 
     public ParkingFloor(int floorNumber){
-        this.spots = new HashMap<>();
+        this.spots = new ConcurrentHashMap<>();
         this.floorNumber = floorNumber;
     }
 

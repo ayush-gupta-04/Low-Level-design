@@ -1,23 +1,25 @@
+package BookMyShow;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import entities.Booking;
-import entities.Cinema;
-import entities.Movie;
-import entities.Payment;
-import entities.Screen;
-import entities.Seat;
-import entities.Show;
-import entities.ShowSeat;
-import entities.User;
-import enums.PaymentStatus;
-import enums.SeatStatus;
-import enums.SeatType;
-import manager.MovieTicketBookingSystem;
-import observer.UserObserver;
-import strategies.PaymentStrategy;
-import strategies.WeekdaysPricingStrategy;
+import BookMyShow.entities.Booking;
+import BookMyShow.entities.Cinema;
+import BookMyShow.entities.Movie;
+import BookMyShow.entities.Payment;
+import BookMyShow.entities.Screen;
+import BookMyShow.entities.Seat;
+import BookMyShow.entities.Show;
+import BookMyShow.entities.ShowSeat;
+import BookMyShow.entities.User;
+import BookMyShow.enums.PaymentStatus;
+import BookMyShow.enums.SeatStatus;
+import BookMyShow.enums.SeatType;
+import BookMyShow.manager.MovieTicketBookingSystem;
+import BookMyShow.observer.UserObserver;
+import BookMyShow.strategies.PaymentStrategy;
+import BookMyShow.strategies.WeekdaysPricingStrategy;
 
 public class Main {
     public static void main(String[] args) {

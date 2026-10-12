@@ -1,15 +1,19 @@
+package ParkingLot;
+
 import java.util.Optional;
 
-import Parking.ParkingFloor;
-import Parking.ParkingSpot;
-import Parking.ParkingTicket;
-import Vehicle.Car;
-import Vehicle.Vehicle;
-import Vehicle.VehicleSize;
-import strategy.FeeStrategy;
-import strategy.ParkingStrategy;
-import strategy.fee.FlatFeeStrategy;
-import strategy.parking.NearestFirstParkingStrategy;
+import ParkingLot.Vehicle.Car;
+import ParkingLot.Vehicle.Bike;
+import ParkingLot.Vehicle.Truck;
+import ParkingLot.Parking.ParkingFloor;
+import ParkingLot.Parking.ParkingSpot;
+import ParkingLot.Parking.ParkingTicket;
+import ParkingLot.Vehicle.Vehicle;
+import ParkingLot.Vehicle.VehicleSize;
+import ParkingLot.strategy.FeeStrategy;
+import ParkingLot.strategy.ParkingStrategy;
+import ParkingLot.strategy.fee.FlatFeeStrategy;
+import ParkingLot.strategy.parking.NearestFirstParkingStrategy;
 
 public class Main {
     public static void main(String[] args) {
@@ -28,9 +32,9 @@ public class Main {
 
 
         Vehicle car1 = new Car("car-1");
-        Vehicle bike1 = new Car("bike-1");
-        Vehicle bike2 = new Car("bike-2");
-        Vehicle truck1 = new Car("truck-1");
+        Vehicle bike1 = new Bike("bike-1");
+        Vehicle bike2 = new Bike("bike-2");
+        Vehicle truck1 = new Truck("truck-1");
         Vehicle car2 = new Car("car-2");
 
         Optional<ParkingTicket> t1 = parkingLot.parkVehicle(bike1);

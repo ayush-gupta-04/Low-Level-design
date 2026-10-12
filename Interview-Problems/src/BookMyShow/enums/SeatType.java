@@ -1,4 +1,5 @@
-package enums;
+package BookMyShow.enums;
+
 
 public enum SeatType {
     SILVER(100.0),

@@ -1,7 +1,8 @@
-package strategies;
+package BookMyShow.strategies;
 
 import java.util.List;
-import entities.ShowSeat;
+
+import BookMyShow.entities.ShowSeat;
 
 public class WeekdaysPricingStrategy implements PricingStrategy {
     @Override

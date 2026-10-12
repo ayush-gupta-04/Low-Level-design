@@ -1,7 +1,7 @@
-package state;
+package VendingMachine.state;
 
-import entities.Coin;
-import vendingmachine.VendingMachine;
+import VendingMachine.entities.Coin;
+import VendingMachine.vendingmachine.VendingMachine;
 
 public interface VendingMachineState {
     public void selectItem(String itemCode, VendingMachine vm);

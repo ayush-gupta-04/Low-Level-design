@@ -1,8 +1,9 @@
-package Parking;
+package ParkingLot.Parking;
 
 import java.util.Date;
 import java.util.UUID;
-import Vehicle.Vehicle;
+
+import ParkingLot.Vehicle.Vehicle;
 
 public class ParkingTicket {
     String ticketId;

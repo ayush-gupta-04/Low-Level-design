@@ -1,7 +1,8 @@
-package entities;
+package BookMyShow.entities;
 
 import java.util.UUID;
-import enums.PaymentStatus;
+
+import BookMyShow.enums.PaymentStatus;
 
 public class Payment {
     private String id;

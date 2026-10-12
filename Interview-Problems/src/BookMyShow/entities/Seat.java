@@ -1,6 +1,6 @@
-package entities;
+package BookMyShow.entities;
 
-import enums.SeatType;
+import BookMyShow.enums.SeatType;
 
 /**
  * Represents a physical seat on a screen.

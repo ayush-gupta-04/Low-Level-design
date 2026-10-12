@@ -1,4 +1,5 @@
-package entities;
+package VendingMachine.entities;
+
 
 import java.util.HashMap;
 import java.util.Map;

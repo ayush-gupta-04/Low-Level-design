@@ -1,7 +1,7 @@
-package Parking;
+package ParkingLot.Parking;
 
-import Vehicle.Vehicle;
-import Vehicle.VehicleSize;
+import ParkingLot.Vehicle.Vehicle;
+import ParkingLot.Vehicle.VehicleSize;
 
 public class ParkingSpot {
     String spotId;

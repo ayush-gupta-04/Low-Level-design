@@ -1,8 +1,7 @@
-package entities;
+package BookMyShow.entities;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class Cinema {
     private String id;

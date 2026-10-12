@@ -1,19 +1,19 @@
-package manager;
+package BookMyShow.manager;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import entities.Booking;
-import entities.Cinema;
-import entities.Movie;
-import entities.Screen;
-import entities.Show;
-import entities.ShowSeat;
-import entities.User;
-import strategies.PaymentStrategy;
-import strategies.PricingStrategy;
+import BookMyShow.entities.Booking;
+import BookMyShow.entities.Cinema;
+import BookMyShow.entities.Movie;
+import BookMyShow.entities.Screen;
+import BookMyShow.entities.Show;
+import BookMyShow.entities.ShowSeat;
+import BookMyShow.entities.User;
+import BookMyShow.strategies.PaymentStrategy;
+import BookMyShow.strategies.PricingStrategy;
 
 public class MovieTicketBookingSystem {
     private static volatile MovieTicketBookingSystem instance;
@@ -44,8 +44,7 @@ public class MovieTicketBookingSystem {
         return movie;
     }
 
-    public Show addShow(String id, Movie movie, Cinema cinema, Screen screen,
-                        PricingStrategy pricingStrategy) {
+    public Show addShow(String id, Movie movie, Cinema cinema, Screen screen, PricingStrategy pricingStrategy) {
         Show show = new Show(id, movie, cinema, screen, pricingStrategy);
         shows.put(show.getId(), show);
         return show;

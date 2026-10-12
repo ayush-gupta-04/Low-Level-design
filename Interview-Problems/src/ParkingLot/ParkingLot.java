@@ -1,15 +1,17 @@
+package ParkingLot;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.ArrayList;
-import java.util.List;
-import strategy.FeeStrategy;
-import strategy.ParkingStrategy;
-import Parking.ParkingTicket;
-import Vehicle.Vehicle;
-import Parking.ParkingFloor;
-import Parking.ParkingSpot;
 
+import ParkingLot.Parking.ParkingFloor;
+import ParkingLot.Parking.ParkingSpot;
+import ParkingLot.Parking.ParkingTicket;
+import ParkingLot.Vehicle.Vehicle;
+import ParkingLot.strategy.FeeStrategy;
+import ParkingLot.strategy.ParkingStrategy;
 
 public class ParkingLot {
     static ParkingLot instance;
@@ -68,13 +70,9 @@ public class ParkingLot {
         }
 
         ticket.setExitTime();
-
-        try {
-            double fee = feeStrategy.calculateFee(ticket);
-            return Optional.of(fee);
-        } finally {
-            ticket.getSpot().unparkVehicle();
-        }
+        double fee = feeStrategy.calculateFee(ticket);
+        ticket.getSpot().unparkVehicle();
+        return Optional.of(fee);
     }
 
     public void setFeeStrategy(FeeStrategy feeStrategy){

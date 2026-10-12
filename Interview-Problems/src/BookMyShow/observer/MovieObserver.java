@@ -1,6 +1,6 @@
-package observer;
+package BookMyShow.observer;
 
-import entities.Movie;
+import BookMyShow.entities.Movie;
 
 public interface MovieObserver {
     public void update(Movie movie);

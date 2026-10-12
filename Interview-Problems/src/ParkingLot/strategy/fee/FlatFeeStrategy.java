@@ -1,7 +1,7 @@
-package strategy.fee;
+package ParkingLot.strategy.fee;
 
-import Parking.ParkingTicket;
-import strategy.FeeStrategy;
+import ParkingLot.Parking.ParkingTicket;
+import ParkingLot.strategy.FeeStrategy;
 
 public class FlatFeeStrategy implements FeeStrategy {
     private final double RATE = 100.0;
