@@ -19,9 +19,7 @@ public class ParkingSpot {
 
     // we are making the (checking and parking) atomic.
     public synchronized boolean tryParkVehicle(Vehicle vehicle) {
-        if (vehicle == null ||
-            parkedVehicle != null ||
-            !canFitVehicle(vehicle)) {
+        if (vehicle == null || parkedVehicle != null || !canFitVehicle(vehicle)) {
             return false;
         }
         parkedVehicle = vehicle;

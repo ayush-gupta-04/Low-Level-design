@@ -23,7 +23,7 @@ public class ParkingFloor {
     public synchronized Optional<ParkingSpot> findAvailableSpot(Vehicle vehicle){
         return spots.values().stream()
         .filter(s -> s.isAvailable() && s.canFitVehicle(vehicle))
-        .sorted(Comparator.comparing(ParkingSpot::getSpotSize))
+        .sorted((a,b) -> Integer.compare(a.getSpotSize().getRank(), b.getSpotSize().getRank()))
         .findFirst();
     }
 }
