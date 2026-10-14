@@ -18,9 +18,7 @@ public class HotelService {
         return hotelsMap.get(hotelId);
     }
     public List<Hotel> searchHotelsByCity(String city) {
-        Collection<Hotel> hotels = hotelsMap.values();
-
-        return hotels.stream()
+        return  hotelsMap.values().stream()
             .filter(hotel -> hotel.getCity().toLowerCase(Locale.ROOT).contains(city.trim().toLowerCase()))
             .toList();
     }

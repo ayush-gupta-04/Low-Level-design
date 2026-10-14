@@ -25,6 +25,8 @@ public abstract class Room {
     // ------ main methods ------
     // must synchronize on this room; 
     // RoomLockManager does that for the system.
+    // Optimisation : 
+    // - we could use TreeMap, find floor and ceil key and check overlap.
     public boolean isFree(DateRange stay) {
         for (DateRange booked : confirmedStays.values()) {
             if (booked.overlaps(stay)) {
