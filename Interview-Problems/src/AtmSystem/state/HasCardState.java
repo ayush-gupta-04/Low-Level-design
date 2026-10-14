@@ -1,7 +1,7 @@
-package AtmSystem.state;
+package ATMSystem.state;
 
-import AtmSystem.entities.ATMSystem;
-import AtmSystem.enums.OperationType;
+import ATMSystem.entities.ATMSystem;
+import ATMSystem.enums.OperationType;
 
 public class HasCardState implements ATMState {
     public void insertCard(String cardNumber, ATMSystem atm){

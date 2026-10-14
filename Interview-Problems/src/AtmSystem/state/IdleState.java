@@ -1,10 +1,10 @@
-package AtmSystem.state;
+package ATMSystem.state;
 
 import java.util.Optional;
 
-import AtmSystem.entities.ATMSystem;
-import AtmSystem.entities.Card;
-import AtmSystem.enums.OperationType;
+import ATMSystem.entities.ATMSystem;
+import ATMSystem.entities.Card;
+import ATMSystem.enums.OperationType;
 
 public class IdleState implements ATMState {
     public void insertCard(String cardNumber, ATMSystem atm){

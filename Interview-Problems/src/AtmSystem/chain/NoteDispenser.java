@@ -1,4 +1,4 @@
-package AtmSystem.chain;
+package ATMSystem.chain;
 
 public abstract class NoteDispenser {
     int valNote;

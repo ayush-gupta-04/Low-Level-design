@@ -1,4 +1,4 @@
-package AtmSystem.enums;
+package ATMSystem.enums;
 
 public enum OperationType {
     WITHDRAW_CASH,

@@ -1,6 +1,6 @@
-package AtmSystem.entities;
+package ATMSystem.entities;
 
-import AtmSystem.chain.NoteDispenser;
+import ATMSystem.chain.NoteDispenser;
 
 public class CashDispenser {
     NoteDispenser noteDispenser;

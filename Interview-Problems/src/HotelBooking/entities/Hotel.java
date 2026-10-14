@@ -1,7 +1,7 @@
 package HotelBooking.entities;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,13 +11,13 @@ public class Hotel {
     private final String address;
     private final String city;
     // Room IDs are unique only within this hotel.
-    private final Map<String, Room> rooms = new LinkedHashMap<>();
+    private final Map<String, Room> rooms = new HashMap<>();
 
     public Hotel(String id, String name, String address, String city) {
-        this.id = requireText(id, "hotel id");
-        this.name = requireText(name, "hotel name");
-        this.address = requireText(address, "hotel address");
-        this.city = requireText(city, "hotel city");
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.city = city;
     }
 
     public Room addRoom(Room room) {
@@ -41,11 +41,4 @@ public class Hotel {
     public String getName() { return name; }
     public String getAddress() { return address; }
     public String getCity() { return city; }
-
-    private static String requireText(String value, String fieldName) {
-        if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(fieldName + " cannot be blank");
-        }
-        return value;
-    }
 }

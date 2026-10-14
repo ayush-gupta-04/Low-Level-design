@@ -1,4 +1,4 @@
-package AtmSystem.entities;
+package ATMSystem.entities;
 
 import java.util.HashMap;
 import java.util.Optional;

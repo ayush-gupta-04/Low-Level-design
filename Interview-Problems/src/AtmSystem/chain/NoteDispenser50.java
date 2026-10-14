@@ -1,4 +1,4 @@
-package AtmSystem.chain;
+package ATMSystem.chain;
 
 
 public class NoteDispenser50 extends NoteDispenser{

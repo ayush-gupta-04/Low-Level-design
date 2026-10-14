@@ -1,4 +1,4 @@
-package AtmSystem.entities;
+package ATMSystem.entities;
 public class Card {
     String cardNumber;
     String pin;

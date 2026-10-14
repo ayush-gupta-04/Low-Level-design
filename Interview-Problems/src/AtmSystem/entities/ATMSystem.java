@@ -1,14 +1,14 @@
-package AtmSystem.entities;
+package ATMSystem.entities;
 
 import java.util.Optional;
 
-import AtmSystem.chain.NoteDispenser;
-import AtmSystem.chain.NoteDispenser100;
-import AtmSystem.chain.NoteDispenser20;
-import AtmSystem.chain.NoteDispenser50;
-import AtmSystem.enums.OperationType;
-import AtmSystem.state.ATMState;
-import AtmSystem.state.IdleState;
+import ATMSystem.chain.NoteDispenser;
+import ATMSystem.chain.NoteDispenser100;
+import ATMSystem.chain.NoteDispenser20;
+import ATMSystem.chain.NoteDispenser50;
+import ATMSystem.enums.OperationType;
+import ATMSystem.state.ATMState;
+import ATMSystem.state.IdleState;
 
 public class ATMSystem {
     private static ATMSystem instance;

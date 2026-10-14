@@ -1,7 +1,7 @@
-package AtmSystem;
+package ATMSystem;
 
-import AtmSystem.entities.ATMSystem;
-import AtmSystem.enums.OperationType;
+import ATMSystem.entities.ATMSystem;
+import ATMSystem.enums.OperationType;
 
 public class Main {
     public static void main(String[] args) {
