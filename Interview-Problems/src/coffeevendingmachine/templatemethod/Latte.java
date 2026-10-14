@@ -1,9 +1,9 @@
-package coffeevendingmachine.templatemethod;
-
-import coffeevendingmachine.decorator.Coffee;
-import coffeevendingmachine.enums.Ingredient;
+package CoffeeVendingMachine.templatemethod;
 
 import java.util.Map;
+
+import CoffeeVendingMachine.decorator.Coffee;
+import CoffeeVendingMachine.enums.Ingredient;
 
 public class Latte extends Coffee {
     int price;

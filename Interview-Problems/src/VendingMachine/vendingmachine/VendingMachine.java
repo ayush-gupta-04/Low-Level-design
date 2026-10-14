@@ -21,17 +21,18 @@ public class VendingMachine {
         this.currentState = currentState;
     }
 
-    // states methods
-    public void selectItem(String itemCode){
+    // ------ states methods -------
+    // I must serialize the operations, since 2 threads on one vending machine can cause issues.
+    public synchronized void selectItem(String itemCode){
         currentState.selectItem(itemCode, this);
     }
-    public void insertCoin(Coin coin){
+    public synchronized void insertCoin(Coin coin){
         currentState.insertCoin(coin, this);
     }
-    public void dispense(){
+    public synchronized void dispense(){
         currentState.dispense(this);
     }
-    public void refund(){
+    public synchronized void refund(){
         currentState.refund(this);
     }
 
@@ -42,26 +43,49 @@ public class VendingMachine {
         Item item = new Item(code, name, price);
         inventory.addItem(item, qty);
     }
-    public void dispenseItem(){
+    
+    public void dispenseItem() {
         Item item = inventory.getItem(selectedItemCode);
-        if(balance >= item.getPrice()){
-            inventory.reduceItem(selectedItemCode);
-            balance -= item.getPrice();
-            
-            System.out.println("Dispensed : " + item.getName());
-            if(balance > 0){
-                System.out.println("Returning Exchange : " + balance);
-            }
+
+        if (item == null) {
+            System.out.println("Item not found!");
+            refundBalance();
+            reset();
+            return;
         }
-        this.reset();
+
+        if (balance < item.getPrice()) {
+            System.out.println("Insufficient balance!");
+            return;
+        }
+
+        // Atomically check and decrement stock.
+        if (!inventory.tryReduceItem(selectedItemCode)) {
+            System.out.println("Item is no longer available!");
+            refundBalance();
+            reset();
+            return;
+        }
+
+        // Charge only after successfully reducing stock.
+        balance -= item.getPrice();
+
+        System.out.println("Dispensed : " + item.getName());
+
+        if (balance > 0) {
+            System.out.println("Returning Exchange : " + balance);
+        }
+
+        reset();
     }
+
     public void reset(){
         this.balance = 0;
         this.selectedItemCode = null;
         this.currentState = new IdleState();
         System.out.println("Reset Successfully!");
     }
-    public void refundBalance(){
+    public void refundBalance(){    
         System.out.println("Refunding Balance : " + balance);
         balance = 0;
     }

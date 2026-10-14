@@ -1,9 +1,9 @@
-package coffeevendingmachine.decorator;
-
-import coffeevendingmachine.enums.Ingredient;
+package CoffeeVendingMachine.decorator;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import CoffeeVendingMachine.enums.Ingredient;
 
 public class CaramelSyrupDecorator extends CoffeeDecorator {
     private static final int COST = 30;

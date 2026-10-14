@@ -1,10 +1,10 @@
-package coffeevendingmachine.factory;
+package CoffeeVendingMachine.factory;
 
-import coffeevendingmachine.enums.CoffeeType;
-import coffeevendingmachine.templatemethod.Cappuccino;
-import coffeevendingmachine.decorator.Coffee;
-import coffeevendingmachine.templatemethod.Espresso;
-import coffeevendingmachine.templatemethod.Latte;
+import CoffeeVendingMachine.decorator.Coffee;
+import CoffeeVendingMachine.enums.CoffeeType;
+import CoffeeVendingMachine.templatemethod.Cappuccino;
+import CoffeeVendingMachine.templatemethod.Espresso;
+import CoffeeVendingMachine.templatemethod.Latte;
 
 public class CoffeeFactory {
     public static Coffee createCoffee(CoffeeType type) {

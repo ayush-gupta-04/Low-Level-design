@@ -1,7 +1,7 @@
-package coffeevendingmachine.state;
+package CoffeeVendingMachine.state;
 
-import coffeevendingmachine.CoffeeVendingMachine;
-import coffeevendingmachine.decorator.Coffee;
+import CoffeeVendingMachine.CoffeeVendingMachine;
+import CoffeeVendingMachine.decorator.Coffee;
 
 public class ReadyState implements VendingMachineState {
     @Override

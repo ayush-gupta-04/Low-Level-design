@@ -1,4 +1,4 @@
-package coffeevendingmachine.enums;
+package CoffeeVendingMachine.enums;
 
 public enum CoffeeType {
     ESPRESSO,

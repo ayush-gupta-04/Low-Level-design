@@ -1,10 +1,10 @@
-package coffeevendingmachine;
-
-import coffeevendingmachine.enums.CoffeeType;
-import coffeevendingmachine.enums.Ingredient;
-import coffeevendingmachine.enums.ToppingType;
+package CoffeeVendingMachine;
 
 import java.util.List;
+
+import CoffeeVendingMachine.enums.CoffeeType;
+import CoffeeVendingMachine.enums.Ingredient;
+import CoffeeVendingMachine.enums.ToppingType;
 
 public class CoffeeVendingMachineDemo {
     public static void main(String[] args) {

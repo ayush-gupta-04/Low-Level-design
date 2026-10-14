@@ -1,9 +1,9 @@
-package coffeevendingmachine;
-
-import coffeevendingmachine.enums.Ingredient;
+package CoffeeVendingMachine;
 
 import java.util.EnumMap;
 import java.util.Map;
+
+import CoffeeVendingMachine.enums.Ingredient;
 
 public class Inventory {
     private static final Inventory INSTANCE = new Inventory();

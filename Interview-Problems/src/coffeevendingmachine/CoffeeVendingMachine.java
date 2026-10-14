@@ -1,17 +1,17 @@
-package coffeevendingmachine;
-
-import coffeevendingmachine.decorator.CaramelSyrupDecorator;
-import coffeevendingmachine.decorator.Coffee;
-import coffeevendingmachine.decorator.ExtraSugarDecorator;
-import coffeevendingmachine.enums.CoffeeType;
-import coffeevendingmachine.enums.Ingredient;
-import coffeevendingmachine.enums.ToppingType;
-import coffeevendingmachine.factory.CoffeeFactory;
-import coffeevendingmachine.state.ReadyState;
-import coffeevendingmachine.state.VendingMachineState;
+package CoffeeVendingMachine;
 
 import java.util.List;
 import java.util.Map;
+
+import CoffeeVendingMachine.decorator.CaramelSyrupDecorator;
+import CoffeeVendingMachine.decorator.Coffee;
+import CoffeeVendingMachine.decorator.ExtraSugarDecorator;
+import CoffeeVendingMachine.enums.CoffeeType;
+import CoffeeVendingMachine.enums.Ingredient;
+import CoffeeVendingMachine.enums.ToppingType;
+import CoffeeVendingMachine.factory.CoffeeFactory;
+import CoffeeVendingMachine.state.ReadyState;
+import CoffeeVendingMachine.state.VendingMachineState;
 
 public class CoffeeVendingMachine {
     private static final CoffeeVendingMachine INSTANCE = new CoffeeVendingMachine();

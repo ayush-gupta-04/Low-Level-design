@@ -1,8 +1,8 @@
-package coffeevendingmachine.state;
+package CoffeeVendingMachine.state;
 
-import coffeevendingmachine.CoffeeVendingMachine;
-import coffeevendingmachine.Inventory;
-import coffeevendingmachine.decorator.Coffee;
+import CoffeeVendingMachine.CoffeeVendingMachine;
+import CoffeeVendingMachine.Inventory;
+import CoffeeVendingMachine.decorator.Coffee;
 
 public class PaidState implements VendingMachineState {
     @Override

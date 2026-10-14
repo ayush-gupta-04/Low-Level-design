@@ -1,8 +1,8 @@
-package coffeevendingmachine.decorator;
-
-import coffeevendingmachine.enums.Ingredient;
+package CoffeeVendingMachine.decorator;
 
 import java.util.Map;
+
+import CoffeeVendingMachine.enums.Ingredient;
 
 
 // Methods needs to be Decorated :
