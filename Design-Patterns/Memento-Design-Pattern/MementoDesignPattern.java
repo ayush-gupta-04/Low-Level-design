@@ -58,7 +58,7 @@ class HistoryManager {
 }
 
 // 🎮 MAIN CLASS: Let's test it out!
-public class Main {
+public class MementoDesignPattern {
     public static void main(String[] args) {
         TextEditor editor = new TextEditor();
         HistoryManager history = new HistoryManager();

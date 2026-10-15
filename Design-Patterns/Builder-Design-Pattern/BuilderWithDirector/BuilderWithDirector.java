@@ -117,7 +117,7 @@ class HttpRequestDirector {
 }
 
 
-public class Main {
+public class BuilderWithDirector {
     public static void main(String[] args) {
         // Normal Request from Builder Directly
         HttpRequest normalRequest = new HttpRequest.HttpRequestBuilder()

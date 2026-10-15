@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Main{
+public class MediatorDesignPattern {
     public static void main(String[] args) {
         IMediator mediator = new ChatMediator();
         User ayush = new ChatUser("Ayush", mediator);

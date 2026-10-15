@@ -44,7 +44,7 @@ class Game {
 }
 
 
-public class Main{
+public class WithoutFlyWeight {
     public static void main(String[] args) {
         Game g = new Game();
         g.makeFlyWeights(1_000_000);

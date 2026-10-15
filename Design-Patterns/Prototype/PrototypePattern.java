@@ -47,7 +47,7 @@ class Monster implements Prototype<Monster> {
     }
 }
 
-public class PrototypeExample {
+public class PrototypePattern {
     public static void main(String[] args) {
         // Create our original prototype
         Inventory originalInventory = new Inventory(Arrays.asList("Sword", "Shield"));

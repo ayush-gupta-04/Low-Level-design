@@ -92,7 +92,7 @@ class HttpRequest {
 }
 
 
-public class Main {
+public class SimpleBuilder {
     public static void main(String[] args) {
         // Using Builder Pattern (nested class)
         HttpRequest request = new HttpRequest.HttpRequestBuilder()

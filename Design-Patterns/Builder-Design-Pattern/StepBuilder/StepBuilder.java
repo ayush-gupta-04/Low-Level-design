@@ -146,7 +146,7 @@ class HttpRequest {
 
 
 
-public class Main {
+public class StepBuilder {
     public static void main(String[] args) {
         HttpRequest stepRequest = HttpRequest.HttpRequestStepBuilder.getBuilder()
             .withUrl("https://api.example.com/products")

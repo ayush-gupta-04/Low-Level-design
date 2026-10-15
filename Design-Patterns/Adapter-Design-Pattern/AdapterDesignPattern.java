@@ -22,7 +22,7 @@ class Adapter implements ITarget{
     }
 }
 
-public class Main {
+public class AdapterDesignPattern {
     public static void main(String[] args) {
         ITarget t = new Adapter(new Adaptee());
         System.out.println(t.strToBinary("6"));
