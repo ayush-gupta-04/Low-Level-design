@@ -17,7 +17,6 @@ import FlightBooking.entities.FlightSeat;
 import FlightBooking.entities.Passenger;
 import FlightBooking.manager.BookingManager;
 import FlightBooking.manager.FlightManager;
-import FlightBooking.manager.SeatLockManager;
 import FlightBooking.strategies.PaymentStrategy;
 import FlightBooking.strategies.PricingStrategy;
 
@@ -53,8 +52,7 @@ public class FlightBookingSystem {
         return aircraft;
     }
 
-    public Flight addFlight(String id, Aircraft aircraft, Airport source, Airport destination,
-                            LocalDateTime departure, LocalDateTime arrival, PricingStrategy pricing) {
+    public Flight addFlight(String id, Aircraft aircraft, Airport source, Airport destination, LocalDateTime departure, LocalDateTime arrival, PricingStrategy pricing) {
         Flight flight = new Flight(id, aircraft, source, destination, departure, arrival, pricing);
         flightManager.addFlight(flight);
         return flight;
@@ -68,17 +66,11 @@ public class FlightBookingSystem {
 
     // ---------- main operations ----------
     public List<Flight> searchFlights(String sourceCode, String destinationCode, LocalDate date) {
-        Airport source = airports.get(sourceCode);
-        Airport destination = airports.get(destinationCode);
-        if (source == null || destination == null) {
-            return List.of();
-        }
-        return flightManager.searchFlights(source, destination, date);
+        return flightManager.searchFlights(airports.get(sourceCode), airports.get(destinationCode), date);
     }
 
     public List<FlightSeat> getAvailableSeats(String flightId) {
-        Flight flight = flightManager.getFlight(flightId);
-        return flight == null ? List.of() : flight.getAvailableSeats();
+        return flightManager.getFlight(flightId).getAvailableSeats();
     }
 
     /** seatNumbers.get(i) is the seat for passengers.get(i). */

@@ -14,34 +14,122 @@ public abstract class NoteDispenser {
         if(amt < 0) return false;
         if(amt == 0) return true;
 
-        int nums = Math.min(amt/valNote, numNote);
-        int rem = amt - (nums*valNote);
+        int numToDispense = Math.min(amt / valNote, numNote);
+        int remainingAmount = amt - (numToDispense * valNote);
 
-        if(rem==0) return true;
-        if(nexNoteDispenser!=null){
-            return nexNoteDispenser.canDispense(rem);
+        if(remainingAmount == 0) return true;
+        if(nexNoteDispenser != null){
+            return nexNoteDispenser.canDispense(remainingAmount);
         }
         return false;
-
     }   
+
     public synchronized void dispense(int amt){
-        if (amt >= valNote) {
-            int numToDispense = Math.min(amt / valNote, this.numNote);
-            int remainingAmount = amt - (numToDispense * valNote);
+        if(amt <= 0) return;
 
-            if (numToDispense > 0) {
-                System.out.println("Dispensing " + numToDispense + " x $" + valNote + " note(s)");
-                this.numNote -= numToDispense;
-            }
+        // Exactly mirror the greedy calculation from canDispense
+        int numToDispense = Math.min(amt / valNote, this.numNote);
+        int remainingAmount = amt - (numToDispense * valNote);
 
-            if (remainingAmount > 0 && this.nexNoteDispenser != null) {
-                this.nexNoteDispenser.dispense(remainingAmount);
-            }
-        } else if (this.nexNoteDispenser != null) {
-            this.nexNoteDispenser.dispense(amt);
+        if (numToDispense > 0) {
+            System.out.println("Dispensing " + numToDispense + " x $" + valNote + " note(s)");
+            this.numNote -= numToDispense;
+        }
+
+        // Forward whatever is left over to the next chain link
+        if (remainingAmount > 0 && this.nexNoteDispenser != null) {
+            this.nexNoteDispenser.dispense(remainingAmount);
         }
     }
+
     public void setNextNoteDispenser(NoteDispenser noteDispenser){
         this.nexNoteDispenser = noteDispenser;
     }
 }
+
+
+
+
+
+
+// package ATMSystem.chain;
+
+// import java.util.HashMap;
+// import java.util.Map;
+
+// public abstract class NoteDispenser {
+//     protected final int valNote;
+//     protected int numNote; // Physical stock count in the cassette
+//     protected NoteDispenser nexNoteDispenser;
+
+//     public NoteDispenser(int val, int num) {
+//         this.valNote = val;
+//         this.numNote = num;
+//     }
+
+//     public void setNextNoteDispenser(NoteDispenser noteDispenser) {
+//         this.nexNoteDispenser = noteDispenser;
+//     }
+
+//     /**
+//      * Public API called by the ATM Controller.
+//      * Synchronized at the root level to prevent parallel threads from double-allocating bills.
+//      */
+//     public synchronized boolean withdraw(int totalAmount) {
+//         Map<Integer, Integer> resultPlan = new HashMap<>();
+        
+//         // Step 1: Run the backtracking algorithm to find a valid note layout
+//         if (canCalculateDispense(totalAmount, resultPlan)) {
+//             // Step 2: If a valid path is found, execute the inventory deduction
+//             commitDispense(resultPlan);
+//             return true;
+//         }
+        
+//         System.out.println("Transaction Failed: Cannot dispense exact amount with current inventory.");
+//         return false;
+//     }
+
+//     /**
+//      * Internal backtracking method.
+//      * Iteratively tries taking fewer higher-value notes if lower-value notes fail down the chain.
+//      */
+//     private synchronized boolean canCalculateDispense(int amt, Map<Integer, Integer> plan) {
+//         if (amt == 0) return true;
+
+//         // Calculate the maximum number of notes this dispenser can theoretically provide
+//         int maxNotesToUse = Math.min(amt / valNote, this.numNote);
+
+//         // BACKTRACKING LOOP: Start with the maximum possible notes. 
+//         // If it fails down the line, decrement 'i' and try again with fewer (or zero) bills.
+//         for (int i = maxNotesToUse; i >= 0; i--) {
+//             int remainder = amt - (i * valNote);
+            
+//             if (remainder == 0) {
+//                 if (i > 0) plan.put(valNote, i);
+//                 return true;
+//             }
+            
+//             // Forward the remainder to the next dispenser in the chain
+//             if (nexNoteDispenser != null && nexNoteDispenser.canCalculateDispense(remainder, plan)) {
+//                 if (i > 0) plan.put(valNote, i);
+//                 return true;
+//             }
+//         }
+        
+//         return false; // Backtrack upward if no combinations work from this point
+//     }
+
+//     /**
+//      * Mutates the physical inventory states down the chain using the approved transaction plan.
+//      */
+//     private synchronized void commitDispense(Map<Integer, Integer> plan) {
+//         if (plan.containsKey(this.valNote)) {
+//             int countToDeduct = plan.get(this.valNote);
+//             this.numNote -= countToDeduct;
+//             System.out.println("Dispensing " + countToDeduct + " x $" + valNote + " note(s). [Remaining stock: " + this.numNote + "]");
+//         }
+//         if (this.nexNoteDispenser != null) {
+//             this.nexNoteDispenser.commitDispense(plan);
+//         }
+//     }
+// }

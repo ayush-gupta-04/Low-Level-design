@@ -70,9 +70,7 @@ public class RentalSystem {
 
         Optional<Reservation> reservation = reservationManager.reserve(customer, vehicle, start, end);
         if(reservation.isPresent()){
-            System.out.println("Reservation " + reservation.get().getId()
-                + " confirmed for " + customer.getName() + " : " + vehicle
-                + " (" + start + " to " + end + ")");
+            System.out.println("Reservation " + reservation.get().getId() + " confirmed for " + customer.getName() + " : " + vehicle + " (" + start + " to " + end + ")");
             return reservation;
         }
         return Optional.empty();
