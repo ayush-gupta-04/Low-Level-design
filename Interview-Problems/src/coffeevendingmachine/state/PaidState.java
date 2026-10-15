@@ -44,6 +44,6 @@ public class PaidState implements VendingMachineState {
 
     @Override
     public void cancel(CoffeeVendingMachine machine) {
-        new SelectingState().cancel(machine);
+        new SelectedState().cancel(machine);
     }
 }

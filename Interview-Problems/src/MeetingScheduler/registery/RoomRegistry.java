@@ -1,8 +1,11 @@
-package MeetingScheduler.entities;
+package MeetingScheduler.registery;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import MeetingScheduler.entities.MeetingRoom;
+import MeetingScheduler.entities.TimeSlot;
 
 // ---------- 6. RoomRegistry: rooms sorted by capacity ----------
 // Optimization : 
@@ -16,10 +19,9 @@ public class RoomRegistry {
     }
 
     // All rooms with capacity >= people, sorted by capacity.
-    public List<MeetingRoom> roomsFitting(int people) {
+    public List<MeetingRoom> findAvailableRooms(TimeSlot slot) {
         return rooms.stream()
-        .filter(r -> r.getCapacity() >= people)
-        .sorted((a,b) -> Integer.compare(a.getCapacity(), b.getCapacity()))
+        .filter(r -> r.getSchedule().isFree(slot))
         .collect(Collectors.toCollection(ArrayList::new));
     }
 }

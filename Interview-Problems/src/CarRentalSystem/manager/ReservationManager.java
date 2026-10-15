@@ -16,7 +16,7 @@ import CarRentalSystem.enums.VehicleStatus;
 
 // Keeps reservations and checks date-range availability
 // TODO : 
-// 1. use Map<Vehicle, Map<StartTime, Reservation>> for logN lookup.
+// 1. use Map<Vehicle, Map<StartTime, Reservation>> for log N lookup.
 
 
 public class ReservationManager {
@@ -24,8 +24,8 @@ public class ReservationManager {
     private final Map<String, Reservation> reservationsById = new ConcurrentHashMap<>();
     private final AtomicLong counter = new AtomicLong(0);
 
-    // Date ranges are [start, end). They overlap iff start < existingEnd
-    // and end > existingStart.
+    // Date ranges are [start, end). They overlap iff start < existingEnd and end > existingStart.
+
     public boolean isAvailable(Vehicle vehicle, LocalDate start, LocalDate end) {
         if (vehicle == null || start == null || end == null || !end.isAfter(start)) {
             return false;

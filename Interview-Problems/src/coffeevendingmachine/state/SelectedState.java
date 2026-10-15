@@ -3,7 +3,7 @@ package CoffeeVendingMachine.state;
 import CoffeeVendingMachine.CoffeeVendingMachine;
 import CoffeeVendingMachine.decorator.Coffee;
 
-public class SelectingState implements VendingMachineState {
+public class SelectedState implements VendingMachineState {
     @Override
     public void selectCoffee(CoffeeVendingMachine machine, Coffee coffee) {
         System.out.println("Already selected. Please pay or cancel.");

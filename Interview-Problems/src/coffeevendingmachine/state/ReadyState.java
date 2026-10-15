@@ -7,7 +7,7 @@ public class ReadyState implements VendingMachineState {
     @Override
     public void selectCoffee(CoffeeVendingMachine machine, Coffee coffee) {
         machine.setSelectedCoffee(coffee);
-        machine.setState(new SelectingState());
+        machine.setState(new SelectedState());
         System.out.println(coffee.getCoffeeType() + " selected. Price: " + coffee.getPrice());
     }
 
