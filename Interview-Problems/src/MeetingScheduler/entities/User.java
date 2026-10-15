@@ -2,6 +2,7 @@ package MeetingScheduler.entities;
 
 public class User {
     private final String id;
+
     private final String name;
     private final Schedule schedule = new Schedule();
 
@@ -12,4 +13,5 @@ public class User {
 
     public String getName() { return name; }
     public Schedule getSchedule() { return schedule; }
+    public String getId() { return id; }
 }

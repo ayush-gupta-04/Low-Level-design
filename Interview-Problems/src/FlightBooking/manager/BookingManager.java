@@ -17,6 +17,11 @@ import FlightBooking.enums.BookingStatus;
 import FlightBooking.enums.PaymentStatus;
 import FlightBooking.strategies.PaymentStrategy;
 
+// TODO : 
+// 1. Add Booking the same FlightSeats for Connecting Flights.
+
+
+
 public class BookingManager {
     private static volatile BookingManager instance;
     private final SeatLockManager seatLockMgr;

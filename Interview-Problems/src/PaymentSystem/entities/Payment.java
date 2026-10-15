@@ -11,17 +11,11 @@ public final class Payment {
     private final BigDecimal amount;
     private final PaymentMethodType paymentMethod;
     private final Instant createdAt;
-
     private PaymentStatus status = PaymentStatus.PENDING;
     private Instant updatedAt = Instant.now();
     private String failureReason;
 
-    public Payment(
-            String paymentId,
-            String userId,
-            BigDecimal amount,
-            PaymentMethodType paymentMethod) {
-
+    public Payment(String paymentId, String userId, BigDecimal amount, PaymentMethodType paymentMethod) {
         this.paymentId = paymentId;
         this.userId = userId;
         this.amount = amount;

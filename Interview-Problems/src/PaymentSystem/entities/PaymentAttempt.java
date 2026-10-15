@@ -18,13 +18,7 @@ public final class PaymentAttempt {
 
     private PaymentResult result;
 
-    public PaymentAttempt(
-            String idempotencyKey,
-            String userId,
-            BigDecimal amount,
-            PaymentMethodType paymentMethod,
-            String paymentId) {
-
+    public PaymentAttempt(String idempotencyKey,String userId, BigDecimal amount, PaymentMethodType paymentMethod, String paymentId) {
         this.idempotencyKey = idempotencyKey;
         this.userId = userId;
         this.amount = amount;
@@ -34,21 +28,11 @@ public final class PaymentAttempt {
     }
 
     // A key cannot be reused for a different logical request.
-    public boolean matchesRequest(
-            String userId,
-            BigDecimal amount,
-            PaymentMethodType paymentMethod) {
-
+    public boolean matchesRequest( String userId, BigDecimal amount,PaymentMethodType paymentMethod) {
         return this.userId.equals(userId) && this.amount.compareTo(amount) == 0 && this.paymentMethod == paymentMethod;
     }
 
     public synchronized void complete( PaymentResult result, PaymentAttemptStatus terminalStatus) {
-        if (status != PaymentAttemptStatus.IN_PROGRESS) {
-            throw new IllegalStateException("Payment attempt has already finished");
-        }
-        if (terminalStatus == PaymentAttemptStatus.IN_PROGRESS) {
-            throw new IllegalArgumentException( "Expected a terminal attempt status");
-        }
         // Publish the result before publishing the terminal status.
         this.result = result;
         this.status = terminalStatus;

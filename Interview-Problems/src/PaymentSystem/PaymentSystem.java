@@ -10,6 +10,7 @@ import PaymentSystem.repository.user.UserRepository;
 import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 
 import PaymentSystem.entities.*;
 import PaymentSystem.enums.*;
@@ -47,27 +48,27 @@ public class PaymentSystem {
         BigDecimal amount = new BigDecimal("499.00");
 
         // First request.
-        PaymentResult firstResult = paymentService.processPayment(
+        Optional<PaymentResult> firstResult = paymentService.processPayment(
                         idempotencyKey,
                         "U101",
                         amount,
                         PaymentMethodType.UPI);
 
         System.out.println("First request:");
-        System.out.println(firstResult);
+        System.out.println(firstResult.get());
 
         // Retry using the SAME key and request details.
-        PaymentResult retryResult = paymentService.processPayment(
+        Optional<PaymentResult> retryResult = paymentService.processPayment(
                         idempotencyKey,
                         "U101",
                         amount,
                         PaymentMethodType.UPI);
 
         System.out.println("\nRetry request:");
-        System.out.println(retryResult);
+        System.out.println(retryResult.get());
 
         // Both results refer to the same payment.
-        System.out.println("\nSame payment ID: " + firstResult.getPaymentId().equals(retryResult.getPaymentId()));
+        System.out.println("\nSame payment ID: " + firstResult.get().getPaymentId().equals(retryResult.get().getPaymentId()));
 
         // View payment history.
         System.out.println("\nPayment history:");

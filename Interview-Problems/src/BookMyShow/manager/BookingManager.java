@@ -15,6 +15,9 @@ import BookMyShow.enums.BookingStatus;
 import BookMyShow.enums.PaymentStatus;
 import BookMyShow.strategies.PaymentStrategy;
 
+// TODO : 
+// 1. Edge cases handling.
+
 public class BookingManager {
     private static BookingManager instance;
     private final SeatLockManager seatLockMgr;

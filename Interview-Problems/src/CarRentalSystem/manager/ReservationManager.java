@@ -14,8 +14,11 @@ import CarRentalSystem.entities.Vehicle;
 import CarRentalSystem.enums.ReservationStatus;
 import CarRentalSystem.enums.VehicleStatus;
 
-// Keeps reservations and checks date-range availability. Date ranges live in
-// Reservation, not Vehicle. Failed operations return false / Optional.empty().
+// Keeps reservations and checks date-range availability
+// TODO : 
+// 1. use Map<Vehicle, Map<StartTime, Reservation>> for logN lookup.
+
+
 public class ReservationManager {
     private final Map<Vehicle, List<Reservation>> reservationsByVehicle = new ConcurrentHashMap<>();
     private final Map<String, Reservation> reservationsById = new ConcurrentHashMap<>();

@@ -14,7 +14,7 @@ public class Meeting {
         this.id = id;
         this.title = title;
         this.organizer = organizer;
-        this.participants = participants;
+        this.participants = List.copyOf(participants);
         this.room = room;
         this.slot = slot;
     }

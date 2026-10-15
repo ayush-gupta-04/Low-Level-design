@@ -8,7 +8,6 @@ public final class UPIPayment implements PaymentMethod {
 
     @Override
     public PaymentExecutionResult process(Payment payment, String idempotencyKey) {
-
         System.out.println("Processing UPI payment: " + payment.getPaymentId());
         // Mock provider response for demonstration.
         return PaymentExecutionResult.success();

@@ -72,7 +72,7 @@ public class MeetingScheduler {
             System.out.println("Meeting not found.");
             return false;
         }
-        if (meeting.getOrganizer() != requester) {
+        if (meeting.getOrganizer().getId() != requester.getId()) {
             System.out.println("Only the organizer can cancel.");
             return false;
         }

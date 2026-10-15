@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 // ---------- 6. RoomRegistry: rooms sorted by capacity ----------
-// capacity -> rooms with exactly that capacity
+// Optimization : 
+// - we can have TreeMap<roomSize, List<MeetingRoom>>.
+// - we can filter rooms having size >= people.
 public class RoomRegistry {
     private List<MeetingRoom> rooms = new ArrayList<>();
 

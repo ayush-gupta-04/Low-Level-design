@@ -4,16 +4,13 @@ public final class PaymentExecutionResult {
     private final boolean successful;
     private final String message;
 
-    private PaymentExecutionResult(
-            boolean successful, String message) {
-
+    private PaymentExecutionResult(boolean successful, String message) {
         this.successful = successful;
         this.message = message;
     }
 
     public static PaymentExecutionResult success() {
-        return new PaymentExecutionResult(
-                true, "Payment approved by provider");
+        return new PaymentExecutionResult(true, "Payment approved by provider");
     }
 
     public static PaymentExecutionResult failure(String reason) {
