@@ -1,10 +1,8 @@
 package BookMyShow.manager;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +13,6 @@ import BookMyShow.entities.ShowSeat;
 import BookMyShow.entities.User;
 import BookMyShow.enums.BookingStatus;
 import BookMyShow.enums.PaymentStatus;
-import BookMyShow.enums.SeatStatus;
 import BookMyShow.strategies.PaymentStrategy;
 
 public class BookingManager {
@@ -96,56 +93,12 @@ public class BookingManager {
             if (booking.getStatus() != BookingStatus.CONFIRMED) {
                 return false;
             }
-
-            boolean released = releaseBookingSeats(
-                show,
-                booking.getShowSeats(),
-                booking.getId()
-            );
-
-            if (!released) {
+            if (!seatLockMgr.releaseBookingSeats(show,booking.getShowSeats(),booking.getId())) {
                 return false;
             }
 
             booking.markCancelled();
             return true;
         }
-    }
-
-    // Release the seats if the seats is still owned by the same bookingId.
-    public boolean releaseBookingSeats(
-            Show show,
-            List<ShowSeat> seats,
-            String bookingId) {
-
-        if (show == null || seats == null || seats.isEmpty() || bookingId == null || bookingId.isEmpty()) {
-            return false;
-        }
-
-        synchronized (show) {
-            Set<ShowSeat> uniqueSeats = new HashSet<>();
-
-            // Validate every seat before changing anything.
-            for (ShowSeat seat : seats) {
-                if (!show.ownsShowSeat(seat)
-                        || !uniqueSeats.add(seat)
-                        || seat.getStatus() != SeatStatus.BOOKED
-                        || !bookingId.equals(seat.getBookingId())) {
-                    return false;
-                }
-            }
-
-            // Release all seats together after validation succeeds.
-            for (ShowSeat seat : seats) {
-                seat.setBookingId(null);
-                seat.setStatus(SeatStatus.AVAILABLE);
-            }
-
-            return true;
-        }
-    }
-
-    public void shutdown() {
-        seatLockMgr.shutdown();
     }
 }

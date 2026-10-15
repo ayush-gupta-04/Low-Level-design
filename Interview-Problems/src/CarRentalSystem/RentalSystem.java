@@ -3,9 +3,10 @@ package CarRentalSystem;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import CarRentalSystem.entities.Bill;
 import CarRentalSystem.entities.Customer;
@@ -19,95 +20,149 @@ import CarRentalSystem.strategies.PaymentMethod;
 import CarRentalSystem.strategies.PricingStrategy;
 import CarRentalSystem.strategies.pricing.DailyPricing;
 
-// ======================= RENTAL SYSTEM (main entry point) =======================
+// Main entry point for the car rental system.
+// Invalid or unsuccessful operations return false, an empty list, or Optional.empty().
 public class RentalSystem {
-    private static final double LATE_FEE_MULTIPLIER = 1.5; // late days cost 1.5x
- 
-    private final Map<String, Vehicle> vehicles = new HashMap<>();
+    private static final double LATE_FEE_MULTIPLIER = 1.5;
+
+    private final Map<String, Vehicle> vehicles = new ConcurrentHashMap<>();
     private final ReservationManager reservationManager = new ReservationManager();
     private final PricingStrategy pricingStrategy = new DailyPricing();
- 
+
     // ---- Vehicle management ----
-    public void addVehicle(Vehicle v) { vehicles.put(v.getId(), v); }
- 
-    public void removeVehicle(String vehicleId) { vehicles.remove(vehicleId); }
- 
-    // ---- Search: vehicles of a type that are free for the date range ----
+    public boolean addVehicle(Vehicle vehicle) {
+        if (vehicle == null || vehicle.getId() == null || vehicle.getId().trim().isEmpty()) {
+            return false;
+        }
+        return vehicles.putIfAbsent(vehicle.getId(), vehicle) == null;
+    }
+
+    public boolean removeVehicle(String vehicleId) {
+        if (vehicleId == null || vehicleId.trim().isEmpty()) {
+            return false;
+        }
+        return vehicles.remove(vehicleId) != null;
+    }
+
+    // ---- Search: vehicles of a type available for the given date range ----
     public List<Vehicle> search(VehicleType type, LocalDate start, LocalDate end) {
         List<Vehicle> result = new ArrayList<>();
-        for (Vehicle v : vehicles.values()) {
-            if (v.getType() == type
-                    && v.getStatus() != VehicleStatus.MAINTENANCE
-                    && reservationManager.isAvailable(v, start, end)) {
-                result.add(v);
+        if (type == null || start == null || end == null || !end.isAfter(start)) {
+            return result;
+        }
+
+        for (Vehicle vehicle : vehicles.values()) {
+            if (vehicle.getType() == type && reservationManager.isAvailable(vehicle, start, end)) {
+                result.add(vehicle);
             }
         }
         return result;
     }
- 
-    // ---- Booking ----
-    public Reservation reserve(Customer customer, String vehicleId, LocalDate start, LocalDate end) {
-        Vehicle vehicle = vehicles.get(vehicleId);
-        if (vehicle == null) throw new IllegalArgumentException("Vehicle not found");
 
-        Reservation r = reservationManager.reserve(customer, vehicle, start, end);
-        System.out.println("Reservation " + r.getId() + " confirmed for " + customer.getName() + " : " + vehicle + " (" + start + " to " + end + ")");
-        return r;
+    // ---- Booking ----
+    public Optional<Reservation> reserve(Customer customer, String vehicleId, LocalDate start, LocalDate end) {
+        if (customer == null || vehicleId == null || vehicleId.trim().isEmpty() || start == null || end == null || !end.isAfter(start)) {
+            return Optional.empty();
+        }
+
+        Vehicle vehicle = vehicles.get(vehicleId);
+        if (vehicle == null) return Optional.empty();
+
+        Optional<Reservation> reservation = reservationManager.reserve(customer, vehicle, start, end);
+        if(reservation.isPresent()){
+            System.out.println("Reservation " + reservation.get().getId()
+                + " confirmed for " + customer.getName() + " : " + vehicle
+                + " (" + start + " to " + end + ")");
+            return reservation;
+        }
+        return Optional.empty();
     }
- 
-    public void cancel(String reservationId) {
-        Reservation reservation = reservationManager.get(reservationId);
+
+    public boolean cancel(String reservationId) {
+        Optional<Reservation> maybeReservation = reservationManager.get(reservationId);
+        if (!maybeReservation.isPresent()) {
+            return false;
+        }
+
+        Reservation reservation = maybeReservation.get();
+
+        Vehicle vehicle = reservation.getVehicle();
+        synchronized (vehicle) {
+            if (reservation.getStatus() != ReservationStatus.CONFIRMED) {
+                return false;
+            }
+            reservation.setStatus(ReservationStatus.CANCELLED);
+            return true;
+        }
+    }
+
+    // ---- Pickup: rental starts ----
+    public boolean pickup(String reservationId) {
+        Optional<Reservation> maybeReservation = reservationManager.get(reservationId);
+        if (!maybeReservation.isPresent()) {
+            return false;
+        }
+
+        Reservation reservation = maybeReservation.get();
         Vehicle vehicle = reservation.getVehicle();
 
         synchronized (vehicle) {
-            if (reservation.getStatus() != ReservationStatus.CONFIRMED) {
-                throw new IllegalStateException("Only CONFIRMED reservations can be cancelled");
+            if (reservation.getStatus() != ReservationStatus.CONFIRMED || vehicle.getStatus() != VehicleStatus.AVAILABLE) {
+                return false;
             }
-            reservation.setStatus(ReservationStatus.CANCELLED);
+            reservation.setStatus(ReservationStatus.ONGOING);
+            vehicle.setStatus(VehicleStatus.RENTED);
         }
-    }
- 
-    // ---- Pickup: rental starts ----
-    public void pickup(String reservationId) {
-        Reservation r = reservationManager.get(reservationId);
-        if (r.getStatus() != ReservationStatus.CONFIRMED) {
-            throw new IllegalStateException("Reservation is not in CONFIRMED state");
-        }
-        r.setStatus(ReservationStatus.ONGOING);
-        r.getVehicle().setStatus(VehicleStatus.RENTED);
+
         System.out.println("Vehicle picked up for reservation " + reservationId);
+        return true;
     }
- 
-    // ---- Return: rental ends, bill is generated, payment is made ----
-    public Bill returnVehicle(String reservationId, LocalDate returnDate, PaymentMethod paymentMethod) {
-        Reservation r = reservationManager.get(reservationId);
-        if (r.getStatus() != ReservationStatus.ONGOING) {
-            throw new IllegalStateException("Reservation is not ONGOING");
+
+    // ---- Return: rental ends, bill is generated, and payment is attempted ----
+    public Optional<Bill> returnVehicle(String reservationId, LocalDate returnDate, PaymentMethod paymentMethod) {
+        if (returnDate == null || paymentMethod == null) {
+            return Optional.empty();
         }
- 
-        Vehicle vehicle = r.getVehicle();
- 
-        // Base rental amount (planned days, minimum 1 day)
-        long plannedDays = Math.max(1, ChronoUnit.DAYS.between(r.getStartDate(), r.getEndDate()));
-        double rentalAmount = pricingStrategy.calculate(vehicle, plannedDays);
- 
-        // Late fee if returned after the planned end date
-        double lateFee = 0;
-        if (returnDate.isAfter(r.getEndDate())) {
-            long lateDays = ChronoUnit.DAYS.between(r.getEndDate(), returnDate);
-            lateFee = lateDays * vehicle.getPricePerDay() * LATE_FEE_MULTIPLIER;
+
+        Optional<Reservation> maybeReservation = reservationManager.get(reservationId);
+        if(maybeReservation.isEmpty()){
+            return Optional.empty();
         }
- 
-        Bill bill = new Bill(r, rentalAmount, lateFee);
-        bill.print();
- 
-        boolean paid = paymentMethod.pay(bill.getTotal());
-        if (!paid) {
-            throw new IllegalStateException("Payment failed. Please retry.");
+
+        Reservation reservation = maybeReservation.get();
+        Vehicle vehicle = reservation.getVehicle();
+        
+        synchronized (vehicle) {
+            if (reservation.getStatus() != ReservationStatus.ONGOING || returnDate.isBefore(reservation.getStartDate())) {
+                return Optional.empty();
+            }
+
+            long plannedDays = Math.max(1, ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate()));
+            double rentalAmount = pricingStrategy.calculate(vehicle, plannedDays);
+
+            double lateFee = 0;
+            if (returnDate.isAfter(reservation.getEndDate())) {
+                long lateDays = ChronoUnit.DAYS.between(reservation.getEndDate(), returnDate);
+                lateFee = lateDays * vehicle.getPricePerDay() * LATE_FEE_MULTIPLIER;
+            }
+
+            Bill bill = new Bill(reservation, rentalAmount, lateFee);
+            boolean paid;
+            try {
+                paid = paymentMethod.pay(bill.getTotal());
+            } catch (RuntimeException paymentError) {
+                // Treat a payment-strategy failure like an unsuccessful payment.
+                return Optional.empty();
+            }
+
+            if (!paid) {
+                return Optional.empty();
+            }
+
+            reservation.setStatus(ReservationStatus.COMPLETED);
+            vehicle.setStatus(VehicleStatus.AVAILABLE);
+            bill.print();
+            return Optional.of(bill);
         }
- 
-        r.setStatus(ReservationStatus.COMPLETED);
-        vehicle.setStatus(VehicleStatus.AVAILABLE);
-        return bill;
     }
 }

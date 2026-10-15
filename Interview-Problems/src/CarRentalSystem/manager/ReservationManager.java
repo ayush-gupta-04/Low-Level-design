@@ -2,10 +2,11 @@ package CarRentalSystem.manager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 import CarRentalSystem.entities.Customer;
 import CarRentalSystem.entities.Reservation;
@@ -13,26 +14,35 @@ import CarRentalSystem.entities.Vehicle;
 import CarRentalSystem.enums.ReservationStatus;
 import CarRentalSystem.enums.VehicleStatus;
 
-// ======================= RESERVATION MANAGER =======================
-// Keeps all reservations and checks availability.
-// Date ranges live in Reservation, NOT in Vehicle.
+// Keeps reservations and checks date-range availability. Date ranges live in
+// Reservation, not Vehicle. Failed operations return false / Optional.empty().
 public class ReservationManager {
     private final Map<Vehicle, List<Reservation>> reservationsByVehicle = new ConcurrentHashMap<>();
     private final Map<String, Reservation> reservationsById = new ConcurrentHashMap<>();
-    private int counter = 1;
- 
-    // Two ranges overlap if newStart < existingEnd AND newEnd > existingStart
-    public  boolean isAvailable(Vehicle vehicle,LocalDate start,LocalDate end) {
+    private final AtomicLong counter = new AtomicLong(0);
+
+    // Date ranges are [start, end). They overlap iff start < existingEnd
+    // and end > existingStart.
+    public boolean isAvailable(Vehicle vehicle, LocalDate start, LocalDate end) {
+        if (vehicle == null || start == null || end == null || !end.isAfter(start)) {
+            return false;
+        }
+
         synchronized (vehicle) {
+            if (vehicle.getStatus() == VehicleStatus.MAINTENANCE) {
+                return false;
+            }
+
             List<Reservation> reservations = reservationsByVehicle.get(vehicle);
             if (reservations == null) {
                 return true;
             }
+
             for (Reservation reservation : reservations) {
                 if (reservation.getStatus() == ReservationStatus.CANCELLED || reservation.getStatus() == ReservationStatus.COMPLETED) {
                     continue;
                 }
-                // Date ranges are [start, end).
+
                 boolean overlaps = start.isBefore(reservation.getEndDate()) && end.isAfter(reservation.getStartDate());
                 if (overlaps) {
                     return false;
@@ -41,32 +51,30 @@ public class ReservationManager {
             return true;
         }
     }
- 
-    // synchronized so two users can't book the same car at the same time
-    public synchronized Reservation reserve(Customer customer, Vehicle vehicle, LocalDate start, LocalDate end) {
-        if (!end.isAfter(start)) {
-            throw new IllegalArgumentException("End date must be after start date");
+
+    // Availability check and reservation insertion happen under the same vehicle lock.
+    public Optional<Reservation> reserve(Customer customer, Vehicle vehicle, LocalDate start, LocalDate end) {
+        if (customer == null || vehicle == null || start == null || end == null || !end.isAfter(start)) {
+            return Optional.empty();
         }
 
         synchronized (vehicle) {
-            if (vehicle.getStatus() == VehicleStatus.MAINTENANCE) {
-                throw new IllegalStateException("Vehicle is under maintenance");
+            if (vehicle.getStatus() == VehicleStatus.MAINTENANCE || !isAvailable(vehicle, start, end)) {
+                return Optional.empty();
             }
-            // Availability check and insertion use the SAME lock.
-            if (!isAvailable(vehicle, start, end)) {
-                throw new IllegalStateException("Vehicle not available for these dates");
-            }
-            String reservationId = "R" + (++counter);
-            Reservation reservation = new Reservation("R" + (++counter),customer,vehicle,start,end);
-            reservationsByVehicle.computeIfAbsent(vehicle, v -> new ArrayList<>()).add(reservation);
+
+            String reservationId = "R" + counter.incrementAndGet();
+            Reservation reservation = new Reservation(reservationId, customer, vehicle, start, end);
+            reservationsByVehicle.computeIfAbsent(vehicle, k -> new ArrayList<>()).add(reservation);
             reservationsById.put(reservationId, reservation);
-            return reservation;
+            return Optional.of(reservation);
         }
     }
- 
-    public Reservation get(String reservationId) {
-        Reservation r = reservationsById.get(reservationId);
-        if (r == null) throw new IllegalArgumentException("Reservation not found");
-        return r;
+
+    public Optional<Reservation> get(String reservationId) {
+        if (reservationId == null || reservationId.trim().isEmpty() || !reservationsById.containsKey(reservationId)) {
+            return Optional.empty();
+        }
+        return Optional.of(reservationsById.get(reservationId));
     }
 }

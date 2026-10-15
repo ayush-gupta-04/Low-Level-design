@@ -1,4 +1,4 @@
-package BookMyShow.manager;
+package BookMyShow;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +12,7 @@ import BookMyShow.entities.Screen;
 import BookMyShow.entities.Show;
 import BookMyShow.entities.ShowSeat;
 import BookMyShow.entities.User;
+import BookMyShow.manager.BookingManager;
 import BookMyShow.strategies.PaymentStrategy;
 import BookMyShow.strategies.PricingStrategy;
 
@@ -75,11 +76,5 @@ public class MovieTicketBookingSystem {
     }
     public boolean cancelBooking(String userId, String bookingId) {
         return bookingMgr.cancelBooking(userId, bookingId);
-    }
-
-
-    // shutdown the executorService.
-    public void shutdown() {
-        bookingMgr.shutdown();
     }
 }

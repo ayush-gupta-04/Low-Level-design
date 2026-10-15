@@ -16,7 +16,6 @@ import BookMyShow.entities.User;
 import BookMyShow.enums.PaymentStatus;
 import BookMyShow.enums.SeatStatus;
 import BookMyShow.enums.SeatType;
-import BookMyShow.manager.MovieTicketBookingSystem;
 import BookMyShow.observer.UserObserver;
 import BookMyShow.strategies.PaymentStrategy;
 import BookMyShow.strategies.WeekdaysPricingStrategy;
@@ -106,7 +105,5 @@ public class Main {
             System.out.printf("Seat %s status: %s%n",
                 eveningSeat.getSeatId(), eveningSeat.getStatus());
         });
-
-        service.shutdown();
     }
 }

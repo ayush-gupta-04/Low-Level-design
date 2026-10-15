@@ -2,7 +2,7 @@ package FlightBooking.manager;
 
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +11,7 @@ import FlightBooking.entities.Flight;
 
 /** Stores flights and answers flight searches. */
 public class FlightManager {
-    private final Map<String, Flight> flights = new LinkedHashMap<>();
+    private final Map<String, Flight> flights = new HashMap<>();
 
     public void addFlight(Flight flight) {
         flights.put(flight.getId(), flight);

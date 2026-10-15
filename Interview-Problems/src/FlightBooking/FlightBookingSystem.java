@@ -1,9 +1,10 @@
-package FlightBooking.manager;
+package FlightBooking;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,6 +15,9 @@ import FlightBooking.entities.Booking;
 import FlightBooking.entities.Flight;
 import FlightBooking.entities.FlightSeat;
 import FlightBooking.entities.Passenger;
+import FlightBooking.manager.BookingManager;
+import FlightBooking.manager.FlightManager;
+import FlightBooking.manager.SeatLockManager;
 import FlightBooking.strategies.PaymentStrategy;
 import FlightBooking.strategies.PricingStrategy;
 
@@ -26,7 +30,7 @@ public class FlightBookingSystem {
     private final Map<String, Passenger> passengers = new HashMap<>();
 
     private final FlightManager flightManager = new FlightManager();
-    private final BookingManager bookingManager = new BookingManager(new SeatManager());
+    private final BookingManager bookingManager = BookingManager.getInstance();
 
     private FlightBookingSystem() { }
 
@@ -78,27 +82,18 @@ public class FlightBookingSystem {
     }
 
     /** seatNumbers.get(i) is the seat for passengers.get(i). */
-    public Optional<Booking> bookFlight(String flightId, List<Passenger> passengers,
-                                        List<String> seatNumbers, PaymentStrategy paymentStrategy) {
+    public Optional<Booking> bookFlight(Passenger user, String flightId, List<Passenger> passengers, List<String> seatNumbers, PaymentStrategy paymentStrategy) {
         Flight flight = flightManager.getFlight(flightId);
-        if (flight == null) {
-            System.out.println("Flight " + flightId + " not found.");
-            return Optional.empty();
-        }
+        Map<FlightSeat, Passenger> assignment = new HashMap<>();
 
-        List<FlightSeat> seats = new ArrayList<>();
-        for (String seatNumber : seatNumbers) {
-            FlightSeat seat = flight.getFlightSeat(seatNumber);
-            if (seat == null) {
-                System.out.println("Seat " + seatNumber + " does not exist on flight " + flightId + ".");
-                return Optional.empty();
-            }
-            seats.add(seat);
+        for (int i = 0; i < seatNumbers.size(); i++) {
+            FlightSeat seat = flight.getFlightSeat(seatNumbers.get(i));
+            assignment.put(seat, passengers.get(i));
         }
-        return bookingManager.createBooking(flight, passengers, seats, paymentStrategy);
+        return bookingManager.createBooking(user, flight, assignment, paymentStrategy);
     }
 
-    public boolean cancelBooking(String bookingId) {
-        return bookingManager.cancelBooking(bookingId);
+    public boolean cancelBooking(String userId, String bookingId) {
+        return bookingManager.cancelBooking(userId, bookingId);
     }
 }

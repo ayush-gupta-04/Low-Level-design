@@ -22,13 +22,6 @@ public class Flight {
     public Flight(String id, Aircraft aircraft, Airport source, Airport destination,
                   LocalDateTime departureTime, LocalDateTime arrivalTime,
                   PricingStrategy pricingStrategy) {
-
-        if (source.getCode().equals(destination.getCode())) {
-            throw new IllegalArgumentException("Source and destination cannot be the same.");
-        }
-        if (!arrivalTime.isAfter(departureTime)) {
-            throw new IllegalArgumentException("Arrival must be after departure.");
-        }
         
         this.id = id;
         this.aircraft = aircraft;
@@ -50,8 +43,7 @@ public class Flight {
 
     /** True only if this FlightSeat belongs to THIS flight (not another one). */
     public boolean ownsFlightSeat(FlightSeat flightSeat) {
-        return flightSeat != null
-            && seatNumberToFlightSeat.get(flightSeat.getSeatNumber()) == flightSeat;
+        return flightSeat != null && seatNumberToFlightSeat.get(flightSeat.getSeatNumber()) == flightSeat;
     }
 
     public List<FlightSeat> getFlightSeats() {
