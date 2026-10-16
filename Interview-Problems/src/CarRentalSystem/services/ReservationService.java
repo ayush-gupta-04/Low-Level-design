@@ -24,9 +24,6 @@ public class ReservationService {
         this.vehicleService = vehicleService;
     }
 
- 
-
-
     // main methods
     // create reservation & cancel reservation
     public Optional<Reservation> createReservation(Customer customer, Vehicle vehicle, LocalDate start, LocalDate end) {
@@ -38,9 +35,7 @@ public class ReservationService {
             Reservation reservation = new Reservation(customer, vehicle, start, end);
             reservationsByVehicle.computeIfAbsent(vehicle, key -> new ArrayList<>()).add(reservation);
             reservationsById.put(reservation.getId(), reservation);
-
             System.out.println("Reservation " + reservation.getId() + " confirmed for " + customer.getName() + " : " + vehicle + " (" + start + " to " + end + ")");
-            
             return Optional.of(reservation);
         }
     }
@@ -49,7 +44,6 @@ public class ReservationService {
         if (reservation==null) {
             return false;
         }
-
         Vehicle vehicle = reservation.getVehicle();
         synchronized (vehicle) {
             if (reservation.getStatus() != ReservationStatus.CONFIRMED) {
@@ -62,9 +56,6 @@ public class ReservationService {
 
     public List<Vehicle> searchAvailable(VehicleType type, LocalDate start, LocalDate end) {
         List<Vehicle> result = new ArrayList<>();
-        if (type == null || start == null || end == null || !end.isAfter(start)) {
-            return result;
-        }
 
         for (Vehicle vehicle : vehicleService.getAllVehicles()) {
             if (vehicle.getType() == type && isAvailable(vehicle, start, end)) {
@@ -81,9 +72,6 @@ public class ReservationService {
     // Helper Function.
     /** Date ranges are [start, end); existing and requested ranges overlap if start < existingEnd and end > existingStart. */
     public boolean isAvailable(Vehicle vehicle, LocalDate start, LocalDate end) {
-        if (vehicle == null || start == null || end == null || !end.isAfter(start)) {
-            return false;
-        }
 
         synchronized (vehicle) {
             if (vehicle.getStatus() == VehicleStatus.MAINTENANCE) {

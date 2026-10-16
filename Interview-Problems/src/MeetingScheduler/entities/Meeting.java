@@ -1,6 +1,7 @@
 package MeetingScheduler.entities;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Meeting {
     private final String id;
@@ -10,8 +11,8 @@ public class Meeting {
     private final MeetingRoom room;
     private final TimeSlot slot;
 
-    public Meeting(String id, String title, User organizer, List<User> participants, MeetingRoom room, TimeSlot slot) {
-        this.id = id;
+    public Meeting(String title, User organizer, List<User> participants, MeetingRoom room, TimeSlot slot) {
+        this.id = UUID.randomUUID().toString();
         this.title = title;
         this.organizer = organizer;
         this.participants = List.copyOf(participants);

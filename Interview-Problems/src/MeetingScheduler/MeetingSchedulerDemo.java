@@ -5,9 +5,10 @@ import java.util.*;
 
 import MeetingScheduler.entities.Meeting;
 import MeetingScheduler.entities.MeetingRoom;
-import MeetingScheduler.entities.MeetingScheduler;
 import MeetingScheduler.entities.TimeSlot;
 import MeetingScheduler.entities.User;
+import MeetingScheduler.service.RoomService;
+import MeetingScheduler.service.UserService;
 import MeetingScheduler.strategy.roomselection.LargestFitStrategy;
 import MeetingScheduler.strategy.roomselection.SmallestFitStrategy;
 
@@ -38,7 +39,9 @@ import MeetingScheduler.strategy.roomselection.SmallestFitStrategy;
 
 public class MeetingSchedulerDemo {
     public static void main(String[] args) {
-        MeetingScheduler scheduler = new MeetingScheduler(new SmallestFitStrategy());
+        MeetingScheduler scheduler = new MeetingScheduler(new RoomService(), new UserService());
+        scheduler.setRoomSelectionStrategy(new SmallestFitStrategy());
+
         scheduler.addRoom(new MeetingRoom("R1", 2));
         scheduler.addRoom(new MeetingRoom("R2", 5));
         scheduler.addRoom(new MeetingRoom("R3", 10));
@@ -58,7 +61,7 @@ public class MeetingSchedulerDemo {
                 LocalDateTime.of(2026, 10, 15, 12, 0));
 
         // 1. Alice + Bob -> smallest fit is R1
-        Meeting m1 = scheduler.scheduleMeeting("Standup", alice, List.of(bob), nineToTen);
+        Optional<Meeting> m1 = scheduler.scheduleMeeting("Standup", alice, List.of(bob), nineToTen);
 
         // 2. Bob is busy at 9:30 -> fails
         scheduler.scheduleMeeting("Design Review", carol, List.of(bob), halfNine);
@@ -67,16 +70,17 @@ public class MeetingSchedulerDemo {
         scheduler.scheduleMeeting("1:1", carol, List.of(), halfNine);
 
         // 4. Only organizer can cancel
-        scheduler.cancelMeeting(m1.getId(), bob);
-        scheduler.cancelMeeting(m1.getId(), alice);
+        scheduler.cancelMeeting(m1.get().getId(), bob);
+        scheduler.cancelMeeting(m1.get().getId(), alice);
 
         // 5. After cancellation, Alice and Bob are free at 9:30 and R1 is free again
         scheduler.scheduleMeeting("Design Review", alice, List.of(bob), halfNine);
 
         // 6. Swap strategy at runtime: now the largest free room is preferred
-        scheduler.setRoomStrategy(new LargestFitStrategy());
+        scheduler.setRoomSelectionStrategy(new LargestFitStrategy());
         scheduler.scheduleMeeting("All Hands", alice, List.of(bob, carol), elevenToTwelve);
 
-        scheduler.printCalendar(bob);
+        scheduler.printCalendarOfUser(bob);
+        scheduler.printCalendarOfRoom(m1.get().getRoom());
     }
 }

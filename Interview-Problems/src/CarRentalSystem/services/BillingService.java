@@ -12,7 +12,6 @@ import CarRentalSystem.strategies.pricing.DailyPricing;
 /** Calculates rental charges and formats the bill for display. */
 public class BillingService {
     private static final double LATE_FEE_MULTIPLIER = 1.5;
-
     private final PricingStrategy pricingStrategy;
 
     public BillingService() {
@@ -20,17 +19,11 @@ public class BillingService {
     }
 
     public BillingService(PricingStrategy pricingStrategy) {
-        if (pricingStrategy == null) {
-            throw new IllegalArgumentException("PricingStrategy cannot be null");
-        }
         this.pricingStrategy = pricingStrategy;
     }
 
     public Bill generateBill(Reservation reservation, LocalDate returnDate) {
-        if (reservation == null || returnDate == null) {
-            throw new IllegalArgumentException("Reservation and return date are required");
-        }
-
+        
         Vehicle vehicle = reservation.getVehicle();
         long plannedDays = Math.max(1,
                 ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate()));

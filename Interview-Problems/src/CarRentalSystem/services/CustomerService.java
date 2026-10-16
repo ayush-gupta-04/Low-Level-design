@@ -15,16 +15,10 @@ public class CustomerService {
     }
 
     public Optional<Customer> getCustomer(String customerId) {
-        if (customerId == null || customerId.trim().isEmpty()) {
-            return Optional.empty();
-        }
         return Optional.ofNullable(customersById.get(customerId));
     }
 
     public void removeCustomer(String customerId) {
-        if (customerId == null || customerId.trim().isEmpty()) {
-            return;
-        }
         if(!customersById.containsKey(customerId)) return;
         customersById.remove(customerId);
     }
