@@ -1,6 +1,7 @@
 package CarRentalSystem.entities;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import CarRentalSystem.enums.ReservationStatus;
 
@@ -12,8 +13,8 @@ public class Reservation {
     private final LocalDate endDate;      // planned return date
     private ReservationStatus status = ReservationStatus.CONFIRMED;
  
-    public Reservation(String id, Customer customer, Vehicle vehicle, LocalDate start, LocalDate end) {
-        this.id = id;
+    public Reservation(Customer customer, Vehicle vehicle, LocalDate start, LocalDate end) {
+        this.id = "REV_" + UUID.randomUUID().toString();
         this.customer = customer;
         this.vehicle = vehicle;
         this.startDate = start;

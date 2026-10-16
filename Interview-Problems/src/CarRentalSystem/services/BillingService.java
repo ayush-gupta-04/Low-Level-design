@@ -1,0 +1,61 @@
+package CarRentalSystem.services;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
+import CarRentalSystem.entities.Bill;
+import CarRentalSystem.entities.Reservation;
+import CarRentalSystem.entities.Vehicle;
+import CarRentalSystem.strategies.PricingStrategy;
+import CarRentalSystem.strategies.pricing.DailyPricing;
+
+/** Calculates rental charges and formats the bill for display. */
+public class BillingService {
+    private static final double LATE_FEE_MULTIPLIER = 1.5;
+
+    private final PricingStrategy pricingStrategy;
+
+    public BillingService() {
+        this(new DailyPricing());
+    }
+
+    public BillingService(PricingStrategy pricingStrategy) {
+        if (pricingStrategy == null) {
+            throw new IllegalArgumentException("PricingStrategy cannot be null");
+        }
+        this.pricingStrategy = pricingStrategy;
+    }
+
+    public Bill generateBill(Reservation reservation, LocalDate returnDate) {
+        if (reservation == null || returnDate == null) {
+            throw new IllegalArgumentException("Reservation and return date are required");
+        }
+
+        Vehicle vehicle = reservation.getVehicle();
+        long plannedDays = Math.max(1,
+                ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate()));
+        double rentalAmount = pricingStrategy.calculate(vehicle, plannedDays);
+
+        double lateFee = 0;
+        if (returnDate.isAfter(reservation.getEndDate())) {
+            long lateDays = ChronoUnit.DAYS.between(reservation.getEndDate(), returnDate);
+            lateFee = lateDays * vehicle.getPricePerDay() * LATE_FEE_MULTIPLIER;
+        }
+
+        return new Bill(reservation, rentalAmount, lateFee);
+    }
+
+    public void printBill(Bill bill) {
+        if (bill == null) {
+            return;
+        }
+
+        System.out.println("------ BILL ------");
+        System.out.println("Customer : " + bill.getReservation().getCustomer().getName());
+        System.out.println("Vehicle  : " + bill.getReservation().getVehicle());
+        System.out.println("Rental   : Rs." + bill.getRentalAmount());
+        System.out.println("Late fee : Rs." + bill.getLateFee());
+        System.out.println("TOTAL    : Rs." + bill.getTotal());
+        System.out.println("------------------");
+    }
+}
