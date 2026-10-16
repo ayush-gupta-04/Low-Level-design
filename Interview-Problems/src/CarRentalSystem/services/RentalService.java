@@ -14,13 +14,11 @@ import CarRentalSystem.strategies.PaymentMethod;
 public class RentalService {
     private final ReservationService reservationService;
     private final BillingService billingService;
-    private final PaymentService paymentService;
 
-    public RentalService(ReservationService reservationService, BillingService billingService, PaymentService paymentService) {
+    public RentalService(ReservationService reservationService, BillingService billingService) {
 
         this.reservationService = reservationService;
         this.billingService = billingService;
-        this.paymentService = paymentService;
     }
 
     public boolean pickup(String reservationId) {
@@ -63,7 +61,7 @@ public class RentalService {
             }
 
             Bill bill = billingService.generateBill(reservation, returnDate);
-            boolean paid = paymentService.processPayment(paymentMethod, bill.getTotal());
+            boolean paid = paymentMethod.pay(bill.getTotal());
             if (!paid) {
                 return Optional.empty();
             }

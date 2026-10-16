@@ -10,7 +10,6 @@ import CarRentalSystem.entities.Reservation;
 import CarRentalSystem.enums.VehicleType;
 import CarRentalSystem.services.BillingService;
 import CarRentalSystem.services.CustomerService;
-import CarRentalSystem.services.PaymentService;
 import CarRentalSystem.services.RentalService;
 import CarRentalSystem.services.ReservationService;
 import CarRentalSystem.services.VehicleService;
@@ -19,11 +18,10 @@ import CarRentalSystem.strategies.payment.UpiPayment;
 public class Main {
     public static void main(String[] args) {
         CustomerService customerService = new CustomerService();
-        PaymentService paymentService = new PaymentService();
         BillingService billingService = new BillingService();
         VehicleService vehicleService = new VehicleService();
         ReservationService reservationService = new ReservationService(vehicleService);
-        RentalService rentalService = new RentalService(reservationService, billingService, paymentService);
+        RentalService rentalService = new RentalService(reservationService, billingService);
         RentalSystem system = new RentalSystem(vehicleService, reservationService, rentalService, customerService);
 
 
