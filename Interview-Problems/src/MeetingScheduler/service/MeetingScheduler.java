@@ -20,7 +20,6 @@ public class MeetingScheduler {
 
     private RoomSelectionStrategy roomSelectionStrategy;
 
-
     public MeetingScheduler() {
         this.rooms = new HashMap<>();
         this.meetings = new HashMap<>();
@@ -50,11 +49,13 @@ public class MeetingScheduler {
                 return Optional.empty();
             }
         }
-        // available rooms
+        // find available rooms
         List<MeetingRoom> listOfMeetingRooms = new ArrayList<>();
         for(MeetingRoom r : rooms.values()){
             if(r.getSchedule().isFree(slot)) listOfMeetingRooms.add(r);
         }
+
+        // select from available rooms.
         Optional<MeetingRoom> room = roomSelectionStrategy.selectRoom(listOfMeetingRooms, attendees.size());
         if (room.isEmpty()) {
             System.out.println("Cannot schedule: no free room available.");
