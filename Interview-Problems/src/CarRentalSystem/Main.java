@@ -22,7 +22,6 @@ public class Main {
 
 
 
-
         system.addVehicle(new Car("V1", "KA01-1111", "Honda City", 2000));
         system.addVehicle(new Car("V2", "KA01-1111", "Swift", 1500));
         system.addVehicle(new Bike("V3", "KA01-1111", "Royal Enfield", 800));

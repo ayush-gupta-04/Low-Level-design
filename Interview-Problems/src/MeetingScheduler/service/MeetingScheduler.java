@@ -1,4 +1,4 @@
-package MeetingScheduler;
+package MeetingScheduler.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,22 +11,20 @@ import MeetingScheduler.entities.Meeting;
 import MeetingScheduler.entities.MeetingRoom;
 import MeetingScheduler.entities.TimeSlot;
 import MeetingScheduler.entities.User;
-import MeetingScheduler.service.RoomService;
-import MeetingScheduler.service.UserService;
 import MeetingScheduler.strategy.RoomSelectionStrategy;
 
 public class MeetingScheduler {
-    private final RoomService roomService;
-    private final UserService userService;
+    private Map<String, MeetingRoom> rooms;
+    private Map<String, User> users;
     private final Map<String, Meeting> meetings;
 
     private RoomSelectionStrategy roomSelectionStrategy;
 
 
-    public MeetingScheduler(RoomService roomService, UserService userService) {
-        this.roomService = roomService;
-        this.userService = userService;
+    public MeetingScheduler() {
+        this.rooms = new HashMap<>();
         this.meetings = new HashMap<>();
+        this.users = new HashMap<>();
     }
 
     public void setRoomSelectionStrategy(RoomSelectionStrategy roomSelectionStrategy){
@@ -34,10 +32,10 @@ public class MeetingScheduler {
     }
     // extra functions.
     public void addRoom(MeetingRoom room) {
-        roomService.addRoom(room);
+        rooms.put(room.getId(), room);
     }
     public void addUser(User user){
-        userService.addUser(user);
+        users.put(user.getId(), user);
     }
     // -----
 
@@ -52,7 +50,12 @@ public class MeetingScheduler {
                 return Optional.empty();
             }
         }
-        Optional<MeetingRoom> room = roomSelectionStrategy.selectRoom(roomService.getAvailableMeetingRooms(slot), attendees.size());
+        // available rooms
+        List<MeetingRoom> listOfMeetingRooms = new ArrayList<>();
+        for(MeetingRoom r : rooms.values()){
+            if(r.getSchedule().isFree(slot)) listOfMeetingRooms.add(r);
+        }
+        Optional<MeetingRoom> room = roomSelectionStrategy.selectRoom(listOfMeetingRooms, attendees.size());
         if (room.isEmpty()) {
             System.out.println("Cannot schedule: no free room available.");
             return Optional.empty();

@@ -7,8 +7,7 @@ import MeetingScheduler.entities.Meeting;
 import MeetingScheduler.entities.MeetingRoom;
 import MeetingScheduler.entities.TimeSlot;
 import MeetingScheduler.entities.User;
-import MeetingScheduler.service.RoomService;
-import MeetingScheduler.service.UserService;
+import MeetingScheduler.service.MeetingScheduler;
 import MeetingScheduler.strategy.roomselection.LargestFitStrategy;
 import MeetingScheduler.strategy.roomselection.SmallestFitStrategy;
 
@@ -39,7 +38,7 @@ import MeetingScheduler.strategy.roomselection.SmallestFitStrategy;
 
 public class MeetingSchedulerDemo {
     public static void main(String[] args) {
-        MeetingScheduler scheduler = new MeetingScheduler(new RoomService(), new UserService());
+        MeetingScheduler scheduler = new MeetingScheduler();
         scheduler.setRoomSelectionStrategy(new SmallestFitStrategy());
 
         scheduler.addRoom(new MeetingRoom("R1", 2));
