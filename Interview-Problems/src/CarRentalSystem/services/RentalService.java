@@ -16,7 +16,6 @@ public class RentalService {
     private final BillingService billingService;
 
     public RentalService(ReservationService reservationService, BillingService billingService) {
-
         this.reservationService = reservationService;
         this.billingService = billingService;
     }

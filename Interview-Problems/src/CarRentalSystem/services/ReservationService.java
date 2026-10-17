@@ -12,16 +12,14 @@ import CarRentalSystem.entities.Reservation;
 import CarRentalSystem.entities.Vehicle;
 import CarRentalSystem.enums.ReservationStatus;
 import CarRentalSystem.enums.VehicleStatus;
-import CarRentalSystem.enums.VehicleType;
 
 /** Owns reservations, date-range availability checks, booking, and cancellation. */
 public class ReservationService {
     private final Map<Vehicle, List<Reservation>> reservationsByVehicle = new ConcurrentHashMap<>();
     private final Map<String, Reservation> reservationsById = new ConcurrentHashMap<>();
-    private final VehicleService vehicleService;
 
-    public ReservationService(VehicleService vehicleService) {
-        this.vehicleService = vehicleService;
+    public ReservationService() {
+
     }
 
     // main methods
@@ -52,17 +50,6 @@ public class ReservationService {
             reservation.setStatus(ReservationStatus.CANCELLED);
             return true;
         }
-    }
-
-    public List<Vehicle> searchAvailable(VehicleType type, LocalDate start, LocalDate end) {
-        List<Vehicle> result = new ArrayList<>();
-
-        for (Vehicle vehicle : vehicleService.getAllVehicles()) {
-            if (vehicle.getType() == type && isAvailable(vehicle, start, end)) {
-                result.add(vehicle);
-            }
-        }
-        return result;
     }
     // ---------
     
