@@ -26,7 +26,7 @@ public class ReservationService {
     // create reservation & cancel reservation
     public Optional<Reservation> createReservation(Customer customer, Vehicle vehicle, LocalDate start, LocalDate end) {
         synchronized (vehicle) {
-            if (vehicle.getStatus() == VehicleStatus.MAINTENANCE || !isAvailable(vehicle, start, end)) {
+            if (!isAvailable(vehicle, start, end)) {
                 return Optional.empty();
             }
 
@@ -61,7 +61,7 @@ public class ReservationService {
     public boolean isAvailable(Vehicle vehicle, LocalDate start, LocalDate end) {
 
         synchronized (vehicle) {
-            if (vehicle.getStatus() == VehicleStatus.MAINTENANCE) {
+            if (vehicle.getStatus() != VehicleStatus.AVAILABLE) {
                 return false;
             }
 
@@ -74,15 +74,14 @@ public class ReservationService {
                 if (reservation.getStatus() == ReservationStatus.CANCELLED || reservation.getStatus() == ReservationStatus.COMPLETED) {
                     continue;
                 }
-                boolean overlaps = start.isBefore(reservation.getEndDate()) && end.isAfter(reservation.getStartDate());
-                if (overlaps) {
+                if (start.isBefore(reservation.getEndDate()) && end.isAfter(reservation.getStartDate())) {
                     return false;
                 }
             }
             return true;
         }
     }
-    public Optional<Reservation> get(String resvId){
-        return Optional.ofNullable(reservationsById.get(resvId));
+    public Reservation get(String resvId){
+        return reservationsById.get(resvId);
     }
 }

@@ -23,12 +23,11 @@ public class RentalService {
     }
 
     public boolean pickup(String reservationId) {
-        Optional<Reservation> maybeReservation = reservationService.get(reservationId);
-        if (!maybeReservation.isPresent()) {
+        Reservation reservation = reservationService.get(reservationId);
+        if (reservation == null) {
             return false;
         }
 
-        Reservation reservation = maybeReservation.get();
         Vehicle vehicle = reservation.getVehicle();
 
         // vehicle level synchronisation is IMP.
@@ -51,12 +50,11 @@ public class RentalService {
             return Optional.empty();
         }
 
-        Optional<Reservation> maybeReservation = reservationService.get(reservationId);
-        if (!maybeReservation.isPresent()) {
+        Reservation reservation = reservationService.get(reservationId);
+        if (reservation == null) {
             return Optional.empty();
         }
 
-        Reservation reservation = maybeReservation.get();
         Vehicle vehicle = reservation.getVehicle();
         Bill bill;
 
