@@ -10,8 +10,10 @@ import ParkingLot.Parking.ParkingFloor;
 import ParkingLot.Parking.ParkingSpot;
 import ParkingLot.Parking.ParkingTicket;
 import ParkingLot.Vehicle.Vehicle;
+import ParkingLot.enums.TicketStatus;
 import ParkingLot.strategy.FeeStrategy;
 import ParkingLot.strategy.ParkingStrategy;
+import ParkingLot.strategy.PaymentStrategy;
 
 public class ParkingLot {
     static ParkingLot instance;
@@ -44,6 +46,7 @@ public class ParkingLot {
 
             ParkingSpot spot = candidate.get();
 
+            // If 2 thread reach here .. only one can claim the spot.
             if (!spot.tryParkVehicle(vehicle)) {
                 // Another thread may have taken this spot.
                 // Search again for an available spot.
@@ -57,22 +60,39 @@ public class ParkingLot {
         }
     }
 
-    public Optional<Double> unparkVehicle(String ticketId){
+    public boolean unparkVehicle(String ticketId, PaymentStrategy paymentStrategy){
 
-        // if we do activeTickets.get() .. 2 thread might get the same ticket and the logic will run twice.
-        // If we remove it right away, it ensures ticket is not available for the next thread.
-        ParkingTicket ticket = activeTickets.remove(ticketId);
+        ParkingTicket ticket = activeTickets.get(ticketId);
+        if(ticket==null) return false;
 
-        // only one thread can pass this check.
-        if (ticket == null) {
-            System.out.println("No vehicle with ticket number : " + ticketId);
-            return Optional.empty();
+        double fee;
+
+        // I am claiming the ticket under ticket lock.
+        // ThreadA : mark the ticket as PAYMENT_IN_PROGRESS
+        // ThreadB : stuck here.
+        synchronized(ticket){
+            if(ticket.getTicketStatus() != TicketStatus.ACTIVE) return false;
+            ticket.setExitTime();
+            fee = feeStrategy.calculateFee(ticket);
+            ticket.setTicketStatus(TicketStatus.PAYMENT_IN_PROGRESS);
         }
 
-        ticket.setExitTime();
-        double fee = feeStrategy.calculateFee(ticket);
-        ticket.getSpot().unparkVehicle();
-        return Optional.of(fee);
+
+        // slow request .. do not keep it under ticket lock.
+        boolean result = paymentStrategy.pay(fee);
+
+        synchronized(ticket){
+            if(result){
+                ticket.getSpot().unparkVehicle();
+                ticket.setTicketStatus(TicketStatus.COMPLETED);
+                activeTickets.remove(ticketId);
+                return true;
+            }
+            // assumption : false means the payment failed.
+            //              the payment may be stuck or is being retried .. in that case ticket status must be Pending_Payment.
+            ticket.setTicketStatus(TicketStatus.ACTIVE);
+            return false;
+        }
     }
 
     public void setFeeStrategy(FeeStrategy feeStrategy){

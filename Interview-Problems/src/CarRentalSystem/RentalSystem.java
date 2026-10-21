@@ -15,7 +15,7 @@ import CarRentalSystem.entities.Vehicle;
 import CarRentalSystem.enums.VehicleType;
 import CarRentalSystem.services.RentalService;
 import CarRentalSystem.services.ReservationService;
-import CarRentalSystem.strategies.PaymentMethod;
+import CarRentalSystem.strategies.PaymentStrategy;
 
 /** Facade: exposes the car-rental use cases and delegates the work to services. */
 public class RentalSystem {
@@ -48,8 +48,8 @@ public class RentalSystem {
         return rentalService.pickup(reservationId);
     }
 
-    public Optional<Bill> returnVehicle(String reservationId, LocalDate returnDate, PaymentMethod paymentMethod) {
-        return rentalService.returnVehicle(reservationId, returnDate, paymentMethod);
+    public Optional<Bill> returnVehicle(String reservationId, LocalDate returnDate, PaymentStrategy paymentStrategy) {
+        return rentalService.returnVehicle(reservationId, returnDate, paymentStrategy);
     }
     // end of main methods.
 

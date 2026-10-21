@@ -9,14 +9,15 @@ import ParkingLot.Parking.ParkingFloor;
 import ParkingLot.Parking.ParkingSpot;
 import ParkingLot.Parking.ParkingTicket;
 import ParkingLot.Vehicle.Vehicle;
-import ParkingLot.Vehicle.VehicleSize;
+import ParkingLot.enums.VehicleSize;
 import ParkingLot.strategy.FeeStrategy;
 import ParkingLot.strategy.ParkingStrategy;
 import ParkingLot.strategy.fee.FlatFeeStrategy;
 import ParkingLot.strategy.parking.NearestFirstParkingStrategy;
+import ParkingLot.strategy.payment.CashPaymentStrategy;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException{
         ParkingLot parkingLot = new ParkingLot();
 
         ParkingStrategy ps = new NearestFirstParkingStrategy();
@@ -48,5 +49,7 @@ public class Main {
             ParkingTicket ticket = t2.get();
             ticket.printTicket();
         }
+
+        parkingLot.unparkVehicle(t1.get().getTicketId(), new CashPaymentStrategy());
     }
 }

@@ -1,7 +1,7 @@
 package ParkingLot.Parking;
 
 import ParkingLot.Vehicle.Vehicle;
-import ParkingLot.Vehicle.VehicleSize;
+import ParkingLot.enums.VehicleSize;
 
 public class ParkingSpot {
     String spotId;

@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import CarRentalSystem.entities.Bill;
+import CarRentalSystem.entities.Payment;
 import CarRentalSystem.entities.Reservation;
 import CarRentalSystem.entities.Vehicle;
+import CarRentalSystem.enums.PaymentStatus;
 import CarRentalSystem.enums.ReservationStatus;
 import CarRentalSystem.enums.VehicleStatus;
-import CarRentalSystem.strategies.PaymentMethod;
+import CarRentalSystem.strategies.PaymentStrategy;
 
 /** Coordinates the pickup and return lifecycle of a rental. */
 public class RentalService {
@@ -29,6 +31,9 @@ public class RentalService {
         Reservation reservation = maybeReservation.get();
         Vehicle vehicle = reservation.getVehicle();
 
+        // vehicle level synchronisation is IMP.
+        // suppose we have ThreadA (for reservation A) and ThreadB (for reservation B) for same vehicle.
+        // both will check available vehicle and create their reservation as ongoing.
         synchronized (vehicle) {
             if (reservation.getStatus() != ReservationStatus.CONFIRMED || vehicle.getStatus() != VehicleStatus.AVAILABLE) {
                 return false;
@@ -41,8 +46,8 @@ public class RentalService {
         return true;
     }
 
-    public Optional<Bill> returnVehicle(String reservationId, LocalDate returnDate, PaymentMethod paymentMethod) {
-        if (returnDate == null || paymentMethod == null) {
+    public Optional<Bill> returnVehicle(String reservationId, LocalDate returnDate, PaymentStrategy paymentStrategy) {
+        if (returnDate == null || paymentStrategy == null) {
             return Optional.empty();
         }
 
@@ -53,22 +58,32 @@ public class RentalService {
 
         Reservation reservation = maybeReservation.get();
         Vehicle vehicle = reservation.getVehicle();
+        Bill bill;
 
+        // vehicle level synchronisation is IMP.
+        // suppose we have ThreadA (for reservation A) and ThreadB (for reservation B) for same vehicle.
+        // both will check reservation as ongoing & generate 2 bills for same reservation.
+        
+        // do not have payment inside this lock.
         synchronized (vehicle) {
             if (reservation.getStatus() != ReservationStatus.ONGOING || returnDate.isBefore(reservation.getStartDate())) {
                 return Optional.empty();
             }
 
-            Bill bill = billingService.generateBill(reservation, returnDate);
-            boolean paid = paymentMethod.pay(bill.getTotal());
-            if (!paid) {
-                return Optional.empty();
-            }
+            bill = billingService.generateBill(reservation, returnDate);
 
             reservation.setStatus(ReservationStatus.COMPLETED);
             vehicle.setStatus(VehicleStatus.AVAILABLE);
-            billingService.printBill(bill);
-            return Optional.of(bill);
         }
+
+        // we make a payment object so payment can be tracked and retries with idempotency.
+        // we don't have idempotency here.
+        // we can introduce paymentService which handles paymentAttempt creation and Payment Creation.
+        Payment payment = paymentStrategy.pay(bill.getBillId(), bill.getTotal() + bill.getLateFee());
+        if(payment.getStatus() == PaymentStatus.SUCCESS){
+            System.out.println("Payment Successfull");
+        }
+
+        return Optional.of(bill);
     }
 }

@@ -1,5 +1,7 @@
 package ParkingLot.Vehicle;
 
+import ParkingLot.enums.VehicleSize;
+
 public abstract class Vehicle {
     VehicleSize size;
     String lisenseNumber;

@@ -12,22 +12,23 @@ import CarRentalSystem.services.BillingService;
 import CarRentalSystem.services.RentalService;
 import CarRentalSystem.services.ReservationService;
 import CarRentalSystem.strategies.payment.UpiPayment;
+import CarRentalSystem.strategies.pricing.DailyPricing;
 
 public class Main {
     public static void main(String[] args) {
-        BillingService billingService = new BillingService();
+        BillingService billingService = new BillingService(new DailyPricing());
         ReservationService reservationService = new ReservationService();
         RentalService rentalService = new RentalService(reservationService, billingService);
         RentalSystem system = new RentalSystem(reservationService, rentalService);
 
 
 
-        system.addVehicle(new Car("V1", "KA01-1111", "Honda City", 2000));
-        system.addVehicle(new Car("V2", "KA01-1111", "Swift", 1500));
-        system.addVehicle(new Bike("V3", "KA01-1111", "Royal Enfield", 800));
+        system.addVehicle(new Car("V1", 2000));
+        system.addVehicle(new Car("V2", 1500));
+        system.addVehicle(new Bike("V3", 800));
 
-        Customer alice = new Customer("C1", "Alice", "DL-12345");
-        Customer bob = new Customer("C2", "Bob", "DL-67890");
+        Customer alice = new Customer("C1", "Alice");
+        Customer bob = new Customer("C2", "Bob");
 
         system.addCustomer(alice);
         system.addCustomer(bob);
