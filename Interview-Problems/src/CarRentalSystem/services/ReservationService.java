@@ -38,45 +38,46 @@ public class ReservationService {
         Reservation reservation = new Reservation(customer, vehicle, start, end);
         reservation.setPrepaidRentalAmount(estimatedAmount);
 
-        // TODO : Ideally a timer should unlock the the pending_payment if it is still pending.
-        // Atomically create a temporary reservation hold.
-        // - Thread A : Acquires the vehicle lock -> checks availability -> inserts a pending reservation
-        // - Thread B : Waits for the same vehicle lock -> checks availability after A releases it -> sees A's hold and rejects the overlapping booking.
-        synchronized (vehicle) {
-            if (!isAvailable(vehicle, start, end)) {
-                return Optional.empty();
-            }
-            reservation.setStatus(ReservationStatus.PENDING_PAYMENT);
-            reservationsByVehicle.computeIfAbsent(vehicle, key -> new ArrayList<>()).add(reservation);
-            reservationsById.put(reservation.getId(), reservation);
-        }
-
-        // do payment
-        // must be under try & catch
-        Payment payment = paymentStrategy.pay(estimatedAmount);
-
-        if(payment==null || payment.getStatus() != PaymentStatus.SUCCESS){
-            cancelPendingReservation(reservation);
+        // Atomically create a temporary reservation hold. 
+        if(!holdTemporaryReservation(reservation, vehicle, start, end)){
+            System.out.println("Cannot reserve Vehicle!");
             return Optional.empty();
         }
 
-        // Confirm the reservation under the vehicle lock.
-        synchronized(vehicle){
-            if(reservation.getStatus() != ReservationStatus.PENDING_PAYMENT){
+        try {
+            Payment payment = paymentStrategy.pay(estimatedAmount);
+
+            // If payment surely fails .. unholdTemporaryReservation() immediately.
+            if(payment==null || payment.getStatus() != PaymentStatus.SUCCESS){
+                unholdTemporaryReservation(reservation);
                 return Optional.empty();
             }
-            reservation.setStatus(ReservationStatus.CONFIRMED);
+
+        } catch (Exception e) {
+            // Reason of failure can be anything.
+            // We must check then mark the status to CANCELLED.
+            unholdTemporaryReservation(reservation);
+            return Optional.empty();
         }
 
-        System.out.println("Reservation " + reservation.getId() + " confirmed. Amount paid: Rs." + estimatedAmount);
 
+
+        // Atomically confirm the reservation.
+        if(!confirmReservation(reservation)){
+            // If I cannot finalize .. because timer restored the temporary hold.
+            // If payment succeeded, initiate an idempotent refund through a refund/payment service here.
+            return Optional.empty();
+        }
+
+        // The System has confirmed the reservation.
+        System.out.println("Reservation Confirmed : " + reservation.getId());
         return Optional.of(reservation);
     }
+
     public boolean cancelReservation(String reservationId) {
         Reservation reservation = reservationsById.get(reservationId);
-        if (reservation==null) {
-            return false;
-        }
+        if (reservation==null) return false;
+
         Vehicle vehicle = reservation.getVehicle();
         synchronized (vehicle) {
             if (reservation.getStatus() != ReservationStatus.CONFIRMED) {
@@ -86,32 +87,21 @@ public class ReservationService {
             return true;
         }
     }
-
-    private void cancelPendingReservation(Reservation reservation){
-        Vehicle vehicle = reservation.getVehicle();
-        synchronized (vehicle) {
-            if (reservation.getStatus() == ReservationStatus.PENDING_PAYMENT) {
-                reservation.setStatus(ReservationStatus.CANCELLED);
-            }
-        }
-    }
     // ---------
     
 
 
 
-    // Helper Functions
+    // ------------  Helper Functions ---------------
     public Reservation get(String resvId){
         return reservationsById.get(resvId);
     }
 
     public boolean isAvailable(Vehicle vehicle, LocalDate start, LocalDate end) {
-
         synchronized (vehicle) {
             if (vehicle.getStatus() != VehicleStatus.AVAILABLE) {
                 return false;
             }
-
             List<Reservation> reservations = reservationsByVehicle.get(vehicle);
             if (reservations == null) {
                 return true;
@@ -127,6 +117,47 @@ public class ReservationService {
             return true;
         }
     }
+
+
+    // TODO : Ideally a timer should unlock the the pending_payment if it is still pending.
+
+    // Atomically create a temporary reservation hold.
+    // - Thread A : Acquires the vehicle lock -> checks availability -> inserts a pending reservation
+    // - Thread B : Waits for the same vehicle lock -> checks availability after A releases it -> sees A's hold and rejects the overlapping booking.
+    private boolean holdTemporaryReservation(Reservation reservation, Vehicle vehicle, LocalDate start, LocalDate end){
+        synchronized (vehicle) {
+            if (!isAvailable(vehicle, start, end)) {
+                return false;
+            }
+            reservation.setStatus(ReservationStatus.PENDING_PAYMENT);
+            reservationsByVehicle.computeIfAbsent(vehicle, key -> new ArrayList<>()).add(reservation);
+            reservationsById.put(reservation.getId(), reservation);
+            return true;
+        }
+    }
+
+    // It will run when,
+    // 1. Payment error or failed.
+    // 2. Automatically after a timer (TODO)
+    private void unholdTemporaryReservation(Reservation reservation){
+        Vehicle vehicle = reservation.getVehicle();
+        synchronized (vehicle) {
+            if (reservation.getStatus() == ReservationStatus.PENDING_PAYMENT) {
+                reservation.setStatus(ReservationStatus.CANCELLED);
+            }
+        }
+    }
+    private boolean confirmReservation(Reservation reservation){
+        Vehicle vehicle = reservation.getVehicle();
+        synchronized(vehicle){
+            if(reservation.getStatus() != ReservationStatus.PENDING_PAYMENT){
+                return false;
+            }
+            reservation.setStatus(ReservationStatus.CONFIRMED);
+            return true;
+        }
+    }
+    // --------- End of Helper Functions ------------------
 }
 
 

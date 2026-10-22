@@ -10,13 +10,11 @@ public class Booking {
     private final Show show;
     private final List<ShowSeat> showSeats;
     private final double amount;
-    private final Payment payment;
     private BookingStatus status;
 
-    public Booking(String id, User user, Show show, List<ShowSeat> showSeats, double amount, Payment payment) {
+    public Booking(String id, User user, Show show, List<ShowSeat> showSeats, double amount) {
         this.amount = amount;
         this.id = id;
-        this.payment = payment;
         this.showSeats = List.copyOf(showSeats);   // because the showSeats can change .. so copy them.
         this.show = show;
         this.user = user;
@@ -28,7 +26,6 @@ public class Booking {
     public Show getShow() { return show; }
     public List<ShowSeat> getShowSeats() { return showSeats; }
     public double getAmount() { return amount; }
-    public Payment getPayment() { return payment; }
     public BookingStatus getStatus() { return status; }
-    public void markCancelled() {this.status = BookingStatus.CANCELLED;}
+    public void setStatus(BookingStatus status) {this.status = status;}
 }

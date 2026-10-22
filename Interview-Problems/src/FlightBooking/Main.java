@@ -280,7 +280,5 @@ public class Main {
                     + ", " + seat.getSeat().getPosition() + ")");
         }
         System.out.println("Total fare : Rs " + booking.getAmount());
-        System.out.println("Payment    : " + booking.getPayment().getMethod()
-                + " " + booking.getPayment().getStatus());
     }
 }

@@ -88,8 +88,7 @@ public class Main {
             System.out.println("Movie: " + booking.getShow().getMovie().getName());
             System.out.println("Seats: "
                 + booking.getShowSeats().stream().map(ShowSeat::getSeatId).toList());
-            System.out.println("Total Amount: $" + booking.getAmount());
-            System.out.println("Payment Status: " + booking.getPayment().getStatus());
+            System.out.println("Total Amount: $" + booking.getAmount());;
         } else {
             System.out.println("Booking failed.");
         }

@@ -15,6 +15,7 @@ import FlightBooking.entities.Passenger;
 import FlightBooking.entities.Payment;
 import FlightBooking.enums.BookingStatus;
 import FlightBooking.enums.PaymentStatus;
+import FlightBooking.enums.SeatStatus;
 import FlightBooking.strategies.PaymentStrategy;
 
 // TODO : 
@@ -24,11 +25,10 @@ import FlightBooking.strategies.PaymentStrategy;
 
 public class BookingManager {
     private static volatile BookingManager instance;
-    private final SeatLockManager seatLockMgr;
-    private final Map<String, Booking> bookings = new ConcurrentHashMap<>();
+    private final Map<String, Booking> bookings;
 
     private BookingManager() {
-        this.seatLockMgr = SeatLockManager.getInstance();
+        this.bookings = new ConcurrentHashMap<>();
     }
 
     public static BookingManager getInstance() {
@@ -42,101 +42,76 @@ public class BookingManager {
         return instance;
     }
 
-    /**
-     * The user (booker) books several seats, each assigned to one passenger.
-     * The lock is held by the booker; passengers are bound to seats on confirm.
-     */
     public Optional<Booking> createBooking(Passenger user, Flight flight,Map<FlightSeat, Passenger> assignment, PaymentStrategy paymentStrategy) {
-
-        if (user == null || flight == null || assignment == null || assignment.isEmpty() || paymentStrategy == null) {
-            return Optional.empty();
-        }
 
         List<FlightSeat> seats = new ArrayList<>(assignment.keySet());
 
-        // 1. Reserve inventory before taking payment.
-        if (!seatLockMgr.lockSeats(flight, seats, user.getId())) {
-            System.out.println("Could not lock the requested seats.");
+        // 1. Temp Hold Seats before taking payment.
+        if (!holdSeats(flight, seats, user.getId())) {
             return Optional.empty();
         }
 
+        double amount = flight.getPricingStrategy().calculateFare(seats);
+
         try {
-            // 2. Calculate the price and process payment.
-            double amount = flight.getPricingStrategy().calculateFare(seats);
+
             Payment payment = paymentStrategy.pay(amount);
 
+            // If payment surely fails .. unholdSeats() immediately.
             if (payment == null || payment.getStatus() != PaymentStatus.SUCCESS) {
-                System.out.println("Payment failed; releasing seat locks.");
+                unholdSeats(flight, seats, user.getId());
                 return Optional.empty();
             }
 
-            String bookingId = UUID.randomUUID().toString();
-
-            // 3. Confirm only if the booker still owns every lock (no timeout/race).
-            if (!seatLockMgr.confirmSeats(flight, assignment, user.getId(), bookingId)) {
-                System.out.println("Seat lock expired or ownership changed; booking not confirmed.");
-                return Optional.empty();
-            }
-
-            Booking booking = new Booking(bookingId, user, flight, assignment, amount, payment);
-            bookings.put(booking.getId(), booking);
-            return Optional.of(booking);
-
-        } finally {
-            // Releases locks on payment failure/exception.
-            // After confirmation the seats are BOOKED, so this is a no-op.
-            seatLockMgr.unlockSeats(flight, seats, user.getId());
+        } catch (Exception e) {
+            // Reason of failure can be anything.
+            // We must check then mark the status to CANCELLED.
+            unholdSeats(flight, seats, user.getId());
         }
+
+
+
+        String bookingId = UUID.randomUUID().toString();
+
+        // Atomically confirm the reservation.
+        if (!confirmSeats(flight, assignment, user.getId(), bookingId)) {
+            // If I cannot finalize .. because timer restored the temporary hold.
+            // If payment succeeded, initiate an idempotent refund through a refund/payment service here.
+            return Optional.empty();
+        }
+
+        System.out.println("Booking Created!");
+        Booking booking = new Booking(bookingId, user, flight, assignment, amount);
+        bookings.put(booking.getId(), booking);
+        return Optional.of(booking);
     }
 
+    // cancel the whole booking
     public boolean cancelBooking(String userId, String bookingId) {
-        if (userId == null || bookingId == null) {
-            return false;
-        }
-
         Booking booking = bookings.get(bookingId);
-
         if (booking == null || !userId.equals(booking.getUser().getId())) {
             return false;
         }
-
         Flight flight = booking.getFlight();
 
         synchronized (flight) {
-            if (booking.getStatus() != BookingStatus.CONFIRMED) {
-                return false;
-            }
-
-            if (!seatLockMgr.releaseBookedSeats(flight, booking.getFlightSeats(), booking.getId())) {
-                return false;
-            }
-
-            booking.markCancelled();
+            if (booking.getStatus() != BookingStatus.CONFIRMED) return false;
+            if (!releaseBookedSeats(flight, booking.getFlightSeats(), booking.getId())) return false;
+            booking.setStatus(BookingStatus.CANCELLED);
             return true;
         }
     }
 
-    /**
-     * Cancels only the given passengers from a booking; the rest stay confirmed.
-     * If every passenger is cancelled, the booking itself becomes CANCELLED.
-     */
+    // Cancels only the given passengers from a booking; the rest stay confirmed.
+    // If every passenger is cancelled, the booking itself becomes CANCELLED.
     public boolean cancelPassengers(String userId, String bookingId, Set<String> passengerIds) {
-        if (userId == null || bookingId == null || passengerIds == null || passengerIds.isEmpty()) {
-            return false;
-        }
-
         Booking booking = bookings.get(bookingId);
 
-        if (booking == null || !userId.equals(booking.getUser().getId())) {
-            return false;
-        }
-
+        if (booking == null || !userId.equals(booking.getUser().getId())) return false;
+        
         Flight flight = booking.getFlight();
-
         synchronized (flight) {
-            if (booking.getStatus() != BookingStatus.CONFIRMED) {
-                return false;
-            }
+            if (booking.getStatus() != BookingStatus.CONFIRMED) return false;
 
             // Find the seats of the requested passengers.
             List<FlightSeat> seatsToCancel = new ArrayList<>();
@@ -147,11 +122,85 @@ public class BookingManager {
                 }
             }
 
-            if (!seatLockMgr.releaseBookedSeats(flight, seatsToCancel, bookingId)) {
-                return false;
+            if (!releaseBookedSeats(flight, seatsToCancel, bookingId)) return false;
+            booking.removeSeats(seatsToCancel);
+            return true;
+        }
+    }
+
+
+
+
+    // ------------------ HELPER functions ------------------
+
+    // Atomically Hold Seats (check + hold)
+    // TODO : Ideally a timer should unlock the the Seats if it is still Locked.
+
+    private boolean holdSeats(Flight flight, List<FlightSeat> seats, String userId) {
+        List<FlightSeat> requestedSeats = List.copyOf(seats);
+        synchronized (flight) {
+            for (FlightSeat seat : requestedSeats) {
+                if (!flight.ownsFlightSeat(seat)) {
+                    return false;
+                }
+                if (seat.getStatus() != SeatStatus.AVAILABLE) {
+                    return false;
+                }
+            }
+            for (FlightSeat seat : requestedSeats) {
+                seat.setStatus(SeatStatus.LOCKED);
+                seat.setLockedBy(userId);
+            }
+            return true;
+        }
+    }
+    private void unholdSeats(Flight flight, List<FlightSeat> seats, String userId) {
+        if (flight == null || seats == null || userId == null) {
+            return;
+        }
+
+        synchronized (flight) {
+            for (FlightSeat seat : seats) {
+                if (flight.ownsFlightSeat(seat) && seat.isLockedBy(userId)) {
+                    seat.setStatus(SeatStatus.AVAILABLE);
+                    seat.setLockedBy(null);
+                    System.out.println("Unlocked seat: " + seat.getSeatNumber() + " for flight " + flight.getId());
+                }
+            }
+        }
+    }
+    private boolean confirmSeats(Flight flight, Map<FlightSeat, Passenger> assignment, String userId, String bookingId) {
+        synchronized (flight) {
+            for (Map.Entry<FlightSeat, Passenger> e : assignment.entrySet()) {
+                FlightSeat seat = e.getKey();
+                if (e.getValue() == null || !flight.ownsFlightSeat(seat) || !seat.isLockedBy(userId)) {
+                    return false;
+                }
             }
 
-            booking.removeSeats(seatsToCancel);
+            // All locks verified; commit the whole set.
+            for (Map.Entry<FlightSeat, Passenger> e : assignment.entrySet()) {
+                FlightSeat seat = e.getKey();
+                seat.setStatus(SeatStatus.BOOKED);
+                seat.setBookingId(bookingId);
+                seat.setPassenger(e.getValue());
+                seat.setLockedBy(null);
+            }
+            return true;
+        }
+    }
+    private boolean releaseBookedSeats(Flight flight, List<FlightSeat> seats, String bookingId) {
+        synchronized (flight) {
+            for (FlightSeat seat : seats) {
+                if (!flight.ownsFlightSeat(seat) || seat.getStatus() != SeatStatus.BOOKED || !bookingId.equals(seat.getBookingId())) {
+                    return false;
+                }
+            }
+            for (FlightSeat seat : seats) {
+                seat.setPassenger(null);
+                seat.setBookingId(null);
+                seat.setStatus(SeatStatus.AVAILABLE);
+            }
             return true;
         }
     }

@@ -18,17 +18,15 @@ public class Booking {
     private final Flight flight;
     private final Map<FlightSeat, Passenger> seatAssignments; // active seat -> passenger
     private final double amount;
-    private final Payment payment;
     private BookingStatus status;
 
-    public Booking(String id, Passenger user, Flight flight, Map<FlightSeat, Passenger> seatAssignments, double amount, Payment payment) {
+    public Booking(String id, Passenger user, Flight flight, Map<FlightSeat, Passenger> seatAssignments, double amount) {
         this.id = id;
         this.user = user;
         this.flight = flight;
         // Defensive copy, order preserved, so later caller-side changes can't affect the booking.
         this.seatAssignments = new LinkedHashMap<>(seatAssignments);
         this.amount = amount;
-        this.payment = payment;
         this.status = BookingStatus.CONFIRMED;
     }
 
@@ -39,18 +37,13 @@ public class Booking {
     public List<FlightSeat> getFlightSeats() { return new ArrayList<>(seatAssignments.keySet()); }
     public List<Passenger> getPassengers() { return new ArrayList<>(seatAssignments.values()); }
     public double getAmount() { return amount; }
-    public Payment getPayment() { return payment; }
     public BookingStatus getStatus() { return status; }
-    public void markCancelled() { this.status = BookingStatus.CANCELLED; }
+    public void setStatus(BookingStatus status) { this.status = status; }
 
-    /**
-     * Drops cancelled seats from the booking; cancels the whole booking if none are left.
-     * Call only while holding the flight's lock, after the seats have been released.
-     */
     public void removeSeats(Collection<FlightSeat> cancelledSeats) {
         seatAssignments.keySet().removeAll(cancelledSeats);
         if (seatAssignments.isEmpty()) {
-            markCancelled();
+            setStatus(BookingStatus.CANCELLED);
         }
     }
 }

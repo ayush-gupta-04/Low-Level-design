@@ -13,18 +13,19 @@ import BookMyShow.entities.ShowSeat;
 import BookMyShow.entities.User;
 import BookMyShow.enums.BookingStatus;
 import BookMyShow.enums.PaymentStatus;
+import BookMyShow.enums.SeatStatus;
 import BookMyShow.strategies.PaymentStrategy;
 
-// TODO : 
-// 1. Edge cases handling.
+
+
+// TODO : Edge cases handling in every method.
 
 public class BookingManager {
     private static BookingManager instance;
-    private final SeatLockManager seatLockMgr;
-    private final Map<String, Booking> bookings = new ConcurrentHashMap<>();
+    private final Map<String, Booking> bookings;
 
     private BookingManager() {
-        this.seatLockMgr = SeatLockManager.getInstance();
+        this.bookings = new ConcurrentHashMap<>();
     }
 
     public static BookingManager getInstance() {
@@ -38,52 +39,51 @@ public class BookingManager {
         return instance;
     }
 
+    // --------------- Main Methods -----------------
     public Optional<Booking> createBooking(User user, Show show, List<ShowSeat> seats, PaymentStrategy paymentStrategy) {
 
-        if (user == null || show == null || seats == null || paymentStrategy == null) {
-            return Optional.empty();
-        }
-
-        // 1. Reserve inventory before taking payment.
-        if (!seatLockMgr.lockSeats(show, seats, user.getId())) {
+        // 1. Temp Hold Seats before taking payment.
+        if (!holdSeats(show, seats, user.getId())) {
             System.out.println("Could not lock the requested seats.");
             return Optional.empty();
         }
 
+        double amount = show.getPricingStrategy().calcPrice(seats);
+
         try {
-            // 2. Calculate the price and process payment.
-            double amount = show.getPricingStrategy().calcPrice(seats);
             Payment payment = paymentStrategy.pay(amount);
             
+            // If payment surely fails .. unholdSeats() immediately.
             if (payment == null || payment.getStatus() != PaymentStatus.SUCCESS) {
-                System.out.println("Payment failed; releasing seat locks.");
+                unholdSeats(show, seats, user.getId());
                 return Optional.empty();
             }
 
-            String bookingId = UUID.randomUUID().toString();
-            // 3. Confirm only if this user still owns every lock (no timeout/race).
-            if (!seatLockMgr.confirmSeats(show, seats, user.getId(),bookingId)) {
-                System.out.println("Seat lock expired or ownership changed; booking not confirmed.");
-                return Optional.empty();
-            }
-
-            Booking booking = new Booking(bookingId, user, show, seats, amount, payment);
-            bookings.put(booking.getId(), booking);
-
-            return Optional.of(booking);
-
-        } finally {
-            // Releases locks on payment failure/exception. After confirmation, locks are already removed.
-            seatLockMgr.unlockSeats(show, seats, user.getId());
+        }catch (Exception e){
+            // Reason of failure can be anything.
+            // We must check then mark the status to CANCELLED.
+            unholdSeats(show, seats, user.getId());
+            return Optional.empty();
         }
+
+
+
+        String bookingId = UUID.randomUUID().toString();
+
+        // Atomically confirm the reservation.
+        if (!confirmSeats(show, seats, user.getId(),bookingId)) {
+            // If I cannot finalize .. because timer restored the temporary hold.
+            // If payment succeeded, initiate an idempotent refund through a refund/payment service here.
+            return Optional.empty();
+        }
+
+        System.out.println("Booking Created!");
+        Booking booking = new Booking(bookingId, user, show, seats, amount);
+        bookings.put(booking.getId(), booking);
+        return Optional.of(booking);
     }
 
-
     public boolean cancelBooking(String userId, String bookingId) {
-        if (userId == null || bookingId == null) {
-            return false;
-        }
-
         Booking booking = bookings.get(bookingId);
 
         if (booking == null || !userId.equals(booking.getUser().getId())) {
@@ -93,14 +93,79 @@ public class BookingManager {
         Show show = booking.getShow();
 
         synchronized (show) {
-            if (booking.getStatus() != BookingStatus.CONFIRMED) {
-                return false;
+            if (booking.getStatus() != BookingStatus.CONFIRMED) return false;
+            if (!releaseBookingSeats(show,booking.getShowSeats(),booking.getId())) return false;
+            booking.setStatus(BookingStatus.CANCELLED);
+            return true;
+        }
+    }
+    // -------------- End of Main Methods -----------------
+
+
+
+
+
+    // --------------- HELPER functions ---------------------
+    // Atomically Hold Seats (check + hold)
+    // TODO : Ideally a timer should unlock the the Seats if it is still Locked.
+
+    private boolean holdSeats(Show show, List<ShowSeat> seats, String userId) {
+        List<ShowSeat> requestedSeats = List.copyOf(seats);
+        synchronized (show) {
+            for (ShowSeat showSeat : requestedSeats) {
+                if (!show.ownsShowSeat(showSeat)) return false;
+
+                if (showSeat.getStatus() != SeatStatus.AVAILABLE) {
+                    return false;
+                }
             }
-            if (!seatLockMgr.releaseBookingSeats(show,booking.getShowSeats(),booking.getId())) {
-                return false;
+            for (ShowSeat showSeat : requestedSeats) {
+                showSeat.setStatus(SeatStatus.LOCKED);
+                showSeat.setLockedBy(userId);
+            }
+            return true;
+        }
+    }
+    private void unholdSeats(Show show, List<ShowSeat> seats, String userId) {
+        synchronized (show) {
+            for (ShowSeat showSeat : seats) {
+                if (show.ownsShowSeat(showSeat) && showSeat.isLockedBy(userId)) {
+                    showSeat.setStatus(SeatStatus.AVAILABLE);
+                    showSeat.setLockedBy(null);
+                }
+            }
+        }
+    }
+    private boolean confirmSeats(Show show, List<ShowSeat> seats, String userId, String bookingId) {
+        synchronized (show) {
+            for (ShowSeat showSeat : seats) {
+                if (!show.ownsShowSeat(showSeat) || !showSeat.isLockedBy(userId)) {
+                    return false;
+                }
             }
 
-            booking.markCancelled();
+            // All locks verified; commit the whole set.
+            for (ShowSeat showSeat : seats) {
+                showSeat.setStatus(SeatStatus.BOOKED);
+                showSeat.setBookingId(bookingId);
+                showSeat.setLockedBy(null);
+            }
+            return true;
+        }
+    }
+    // Release the seats if the seats is still owned by the same bookingId.
+    private boolean releaseBookingSeats(Show show, List<ShowSeat> seats, String bookingId) {
+        synchronized (show) {
+            for (ShowSeat seat : seats) {
+                if (!show.ownsShowSeat(seat) || seat.getStatus() != SeatStatus.BOOKED || !bookingId.equals(seat.getBookingId())) {
+                    return false;
+                }
+            }
+            // Release all seats together after validation succeeds.
+            for (ShowSeat seat : seats) {
+                seat.setBookingId(null);
+                seat.setStatus(SeatStatus.AVAILABLE);
+            }
             return true;
         }
     }
