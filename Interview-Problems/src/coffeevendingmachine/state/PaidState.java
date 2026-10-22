@@ -25,7 +25,6 @@ public class PaidState implements VendingMachineState {
             System.out.println("Sorry, insufficient ingredients for " + coffeeToDispense.getCoffeeType() + ".");
             System.out.println("Refunding " + machine.getMoneyInserted());
             machine.reset();
-            machine.setState(new ReadyState());
             return;
         }
 
@@ -39,7 +38,6 @@ public class PaidState implements VendingMachineState {
         }
 
         machine.reset();
-        machine.setState(new ReadyState());
     }
 
     @Override

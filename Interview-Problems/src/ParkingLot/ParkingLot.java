@@ -15,6 +15,28 @@ import ParkingLot.strategy.FeeStrategy;
 import ParkingLot.strategy.ParkingStrategy;
 import ParkingLot.strategy.PaymentStrategy;
 
+
+
+/*
+2 IMP Methods : 
+1. park()
+    - find spot.
+    - atomically claim the spot (only 1 thread can)
+    - create ticket and return.
+
+2. unpark()
+    - find ticket.
+    - claim the ticket under ticket lock.
+    - calc fee & set ticket status as PAYMENT_IN_PROGRESS
+    - do payment (outside ticket lock)
+    - acquire the ticket lock again
+    - finalize the ticket (unpark, mark ticket as completed)
+*/
+
+
+
+
+
 public class ParkingLot {
     static ParkingLot instance;
     private FeeStrategy feeStrategy;
@@ -72,6 +94,7 @@ public class ParkingLot {
         // ThreadB : stuck here.
         synchronized(ticket){
             if(ticket.getTicketStatus() != TicketStatus.ACTIVE) return false;
+
             ticket.setExitTime();
             fee = feeStrategy.calculateFee(ticket);
             ticket.setTicketStatus(TicketStatus.PAYMENT_IN_PROGRESS);
@@ -104,5 +127,4 @@ public class ParkingLot {
     public void addFloor(ParkingFloor floor){
         floors.add(floor);
     }
-
 }

@@ -1,5 +1,8 @@
 package ATMSystem.entities;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ATMSystem.chain.NoteDispenser;
 
 public class CashDispenser {
@@ -7,13 +10,25 @@ public class CashDispenser {
 
     public CashDispenser(NoteDispenser noteDispenser){
         this.noteDispenser = noteDispenser;
-    }   
-
-    public boolean canDispenseCash(int amt){
-        if(amt % 10 != 0) return false;
-        return noteDispenser.canDispense(amt);
-    }   
-    public void dispenseCash(int amt){
-        noteDispenser.dispense(amt);
     }
+
+    public synchronized boolean tryDispenseCash(int amount) {
+        if (amount <= 0 || !noteDispenser.canDispense(amount)) {
+            return false;
+        }
+        noteDispenser.dispense(amount);
+        return true;
+    }
+
+    // public synchronized boolean tryDispenseCash(int amount) {
+    //     if(amount <= 0) return false;
+
+    //     Map<Integer, Integer> resultPlan = new HashMap<>();
+        
+    //     if (noteDispenser.canDispense(amount, resultPlan)) {
+    //         noteDispenser.dispense(resultPlan);
+    //         return true;
+    //     }
+    //     return false;
+    // }
 }

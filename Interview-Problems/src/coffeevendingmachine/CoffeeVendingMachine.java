@@ -97,6 +97,7 @@ public class CoffeeVendingMachine {
     public void reset() {
         this.selectedCoffee = null;
         this.moneyInserted = 0;
+        this.setState(new ReadyState());
     }
 
     public Map<Ingredient, Integer> showIngredientsMap() {

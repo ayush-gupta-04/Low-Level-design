@@ -39,11 +39,6 @@ public class VendingMachine {
 
 
     // imp functions
-    public void addItem(String code, String name, int price , int qty){
-        Item item = new Item(code, name, price);
-        inventory.addItem(item, qty);
-    }
-    
     public void dispenseItem() {
         Item item = inventory.getItem(selectedItemCode);
 
@@ -75,7 +70,6 @@ public class VendingMachine {
         if (balance > 0) {
             System.out.println("Returning Exchange : " + balance);
         }
-
         reset();
     }
 
@@ -87,9 +81,15 @@ public class VendingMachine {
     }
     public void refundBalance(){    
         System.out.println("Refunding Balance : " + balance);
-        balance = 0;
+        this.balance = 0;
     }
 
+
+    // helper function
+    public void addItem(String code, String name, int price , int qty){
+        Item item = new Item(code, name, price);
+        inventory.addItem(item, qty);
+    }
 
 
     // getter & setter

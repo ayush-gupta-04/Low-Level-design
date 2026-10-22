@@ -61,20 +61,23 @@ public class ATMSystem {
 
     // --- core functions -----
     public void withdrawCash(int amt){
-        if(!cashDispenser.canDispenseCash(amt)){
-            System.out.println("Insufficient cash available in the ATM.");
+        if (amt <= 0) {
             return;
         }
-
+        // Assuming the bank withdrawal succeeds here.
         bankService.withdraw(currentCard, amt);
 
         try {
-            cashDispenser.dispenseCash(amt);
+            if (!cashDispenser.tryDispenseCash(amt)) {
+                bankService.deposite(currentCard, amt);
+                System.out.println("Unable to dispense cash. Amount refunded.");
+            }
         } catch (Exception e) {
             bankService.deposite(currentCard, amt);
+            System.out.println("Dispensing failed. Amount refunded.");
         }
-
     }
+
     public void depositCash(int amt){
         bankService.deposite(currentCard, amt);
     }
