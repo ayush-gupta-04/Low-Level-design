@@ -46,10 +46,7 @@ public class RentalService {
     }
 
     public Optional<Bill> returnVehicle(String reservationId, LocalDate returnDate, PaymentStrategy paymentStrategy) {
-        if (returnDate == null || paymentStrategy == null) {
-            return Optional.empty();
-        }
-
+        
         Reservation reservation = reservationService.get(reservationId);
         if (reservation == null) {
             return Optional.empty();
@@ -63,25 +60,47 @@ public class RentalService {
         // both will check reservation as ongoing & generate 2 bills for same reservation.
         
         // do not have payment inside this lock.
+        // TODO : Ideally a timer should unlock the the RETURN_PROCESSING if it is still RETURN_PROCESSING.
         synchronized (vehicle) {
             if (reservation.getStatus() != ReservationStatus.ONGOING || returnDate.isBefore(reservation.getStartDate())) {
                 return Optional.empty();
             }
 
             bill = billingService.generateBill(reservation, returnDate);
+            reservation.setStatus(ReservationStatus.RETURN_PROCESSING);
+        }
 
+
+        // calc due amount.
+        // do the payment
+        double amountDue = Math.max(0.0, bill.getTotal() - reservation.getPrepaidRentalAmount());
+        if (amountDue > 0) {
+            Payment payment = paymentStrategy.pay(amountDue);
+
+            if (payment == null || payment.getStatus() != PaymentStatus.SUCCESS) {
+                restoreOngoingStatus(reservation);
+                return Optional.empty();
+            }
+        }
+
+        // Atomically finalize the return.
+        synchronized (vehicle) {
+            if (reservation.getStatus() != ReservationStatus.RETURN_PROCESSING) {
+                return Optional.empty();
+            }
             reservation.setStatus(ReservationStatus.COMPLETED);
             vehicle.setStatus(VehicleStatus.AVAILABLE);
         }
 
-        // we make a payment object so payment can be tracked and retries with idempotency.
-        // we don't have idempotency here.
-        // we can introduce paymentService which handles paymentAttempt creation and Payment Creation.
-        Payment payment = paymentStrategy.pay(bill.getBillId(), bill.getTotal() + bill.getLateFee());
-        if(payment.getStatus() == PaymentStatus.SUCCESS){
-            System.out.println("Payment Successfull");
-        }
-
         return Optional.of(bill);
+    }
+
+    private void restoreOngoingStatus(Reservation reservation) {
+        Vehicle vehicle = reservation.getVehicle();
+        synchronized (vehicle) {
+            if (reservation.getStatus() == ReservationStatus.RETURN_PROCESSING) {
+                reservation.setStatus(ReservationStatus.ONGOING);
+            }
+        }
     }
 }

@@ -16,6 +16,7 @@ import CarRentalSystem.enums.VehicleType;
 import CarRentalSystem.services.RentalService;
 import CarRentalSystem.services.ReservationService;
 import CarRentalSystem.strategies.PaymentStrategy;
+import CarRentalSystem.strategies.payment.UpiPayment;
 
 /** Facade: exposes the car-rental use cases and delegates the work to services. */
 public class RentalSystem {
@@ -37,7 +38,7 @@ public class RentalSystem {
         Vehicle vehicle = vehicles.get(vehicleId);
         if(vehicle == null || customer == null) return Optional.empty();
 
-        return reservationService.createReservation(customer, vehicle, start, end);
+        return reservationService.createReservation(customer, vehicle, start, end, new UpiPayment());
     }
 
     public boolean cancelReservation(String reservationId) {

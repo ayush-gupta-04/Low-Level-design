@@ -11,25 +11,22 @@ import CarRentalSystem.strategies.PricingStrategy;
 /** Calculates rental charges and formats the bill for display. */
 public class BillingService {
     private static final double LATE_FEE_MULTIPLIER = 1.5;
-    private final PricingStrategy pricingStrategy;
+    private PricingStrategy pricingStrategy;
 
-    public BillingService(PricingStrategy pricingStrategy) {
+    public BillingService(PricingStrategy pricingStrategy){
         this.pricingStrategy = pricingStrategy;
     }
 
     public Bill generateBill(Reservation reservation, LocalDate returnDate) {
-        
         Vehicle vehicle = reservation.getVehicle();
-        long plannedDays = Math.max(1,ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate()));
-        double rentalAmount = pricingStrategy.calculate(vehicle, plannedDays);
-
+        double rentalAmount = pricingStrategy.calculate(vehicle, reservation.getStartDate(), reservation.getEndDate());
         double lateFee = 0;
         if (returnDate.isAfter(reservation.getEndDate())) {
             long lateDays = ChronoUnit.DAYS.between(reservation.getEndDate(), returnDate);
             lateFee = lateDays * vehicle.getPricePerDay() * LATE_FEE_MULTIPLIER;
         }
 
-        return new Bill(reservation, rentalAmount, lateFee);
+        return new Bill(reservation,rentalAmount, lateFee);
     }
 
     public void printBill(Bill bill) {

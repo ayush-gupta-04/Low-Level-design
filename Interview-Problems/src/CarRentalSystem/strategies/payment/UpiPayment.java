@@ -6,7 +6,8 @@ import CarRentalSystem.enums.PaymentStatus;
 import CarRentalSystem.strategies.PaymentStrategy;
 
 public class UpiPayment implements PaymentStrategy {
-    public Payment pay(String billId, double amount) {
-        return new Payment(billId, amount, PaymentMethod.UPI, PaymentStatus.SUCCESS);
+    public Payment pay(double amount) {
+        System.out.println("Paying through UPI : " + amount);
+        return new Payment(amount, PaymentMethod.UPI, PaymentStatus.SUCCESS);
     }
 }

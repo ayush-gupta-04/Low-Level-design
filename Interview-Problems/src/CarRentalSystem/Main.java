@@ -17,7 +17,7 @@ import CarRentalSystem.strategies.pricing.DailyPricing;
 public class Main {
     public static void main(String[] args) {
         BillingService billingService = new BillingService(new DailyPricing());
-        ReservationService reservationService = new ReservationService();
+        ReservationService reservationService = new ReservationService(new DailyPricing());
         RentalService rentalService = new RentalService(reservationService, billingService);
         RentalSystem system = new RentalSystem(reservationService, rentalService);
 
