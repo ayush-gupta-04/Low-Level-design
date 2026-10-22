@@ -40,7 +40,6 @@ public class ReservationService {
 
         // Atomically create a temporary reservation hold. 
         if(!holdTemporaryReservation(reservation, vehicle, start, end)){
-            System.out.println("Cannot reserve Vehicle!");
             return Optional.empty();
         }
 

@@ -35,10 +35,6 @@ public class ShowSeat {
         return status == SeatStatus.LOCKED && userId != null && userId.equals(lockedBy);
     }
 
-    /**
-     * State changes should only be performed by SeatLockManager / BookingManager
-     * while synchronized on the owning Show.
-     */
     public void setStatus(SeatStatus status) { this.status = status; }
     public void setLockedBy(String lockedBy) { this.lockedBy = lockedBy; }
     public void setBookingId(String bookingId) { this.bookingId = bookingId; }
