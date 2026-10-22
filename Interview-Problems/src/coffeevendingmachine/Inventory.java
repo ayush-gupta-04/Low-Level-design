@@ -19,13 +19,7 @@ public class Inventory {
         return INSTANCE;
     }
 
-    public synchronized void addStock(Ingredient ingredient, int quantity) {
-        if (ingredient == null || quantity <= 0) {
-            return;
-        }
-        stock.put(ingredient, stock.getOrDefault(ingredient, 0) + quantity);
-    }
-
+    // ------- Main methods ----------
     public synchronized boolean hasIngredients(Map<Ingredient, Integer> recipe) {
         if (recipe == null || recipe.isEmpty()) {
             return false;
@@ -42,7 +36,7 @@ public class Inventory {
         return true;
     }
 
-    /** Checks and deducts a recipe atomically so stock cannot change between the two operations. */
+    // Checks and deducts a recipe atomically so stock cannot change between the two operations.
     public synchronized boolean tryDeductIngredients(Map<Ingredient, Integer> recipe) {
         if (!hasIngredients(recipe)) {
             return false;
@@ -55,8 +49,17 @@ public class Inventory {
         }
         return true;
     }
+    // ------- End of Main Methods ---------
 
-    /** Returns a snapshot so callers cannot modify the machine's internal stock. */
+
+    public synchronized void addStock(Ingredient ingredient, int quantity) {
+        if (ingredient == null || quantity <= 0) {
+            return;
+        }
+        stock.put(ingredient, stock.getOrDefault(ingredient, 0) + quantity);
+    }
+
+    // Returns a snapshot so callers cannot modify the machine's internal stock.
     public synchronized Map<Ingredient, Integer> getAllIngredients() {
         return new EnumMap<>(stock);
     }

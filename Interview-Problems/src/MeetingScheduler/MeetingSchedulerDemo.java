@@ -38,8 +38,7 @@ import MeetingScheduler.strategy.roomselection.SmallestFitStrategy;
 
 public class MeetingSchedulerDemo {
     public static void main(String[] args) {
-        MeetingScheduler scheduler = new MeetingScheduler();
-        scheduler.setRoomSelectionStrategy(new SmallestFitStrategy());
+        MeetingScheduler scheduler = new MeetingScheduler(new SmallestFitStrategy());
 
         scheduler.addRoom(new MeetingRoom("R1", 2));
         scheduler.addRoom(new MeetingRoom("R2", 5));

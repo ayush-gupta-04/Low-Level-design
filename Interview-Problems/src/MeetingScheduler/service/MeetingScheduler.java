@@ -11,7 +11,17 @@ import MeetingScheduler.entities.Meeting;
 import MeetingScheduler.entities.MeetingRoom;
 import MeetingScheduler.entities.TimeSlot;
 import MeetingScheduler.entities.User;
+import MeetingScheduler.enums.MeetingStatus;
 import MeetingScheduler.strategy.RoomSelectionStrategy;
+
+
+
+// TODO :
+// 1. Resource Level Locking : 
+//    - we have lock on the whole meeting scheduler.
+//    - not a good design
+//    - we must have lock on the (rooms + users)
+
 
 public class MeetingScheduler {
     private Map<String, MeetingRoom> rooms;
@@ -20,10 +30,11 @@ public class MeetingScheduler {
 
     private RoomSelectionStrategy roomSelectionStrategy;
 
-    public MeetingScheduler() {
+    public MeetingScheduler(RoomSelectionStrategy roomSelectionStrategy) {
         this.rooms = new HashMap<>();
-        this.meetings = new HashMap<>();
         this.users = new HashMap<>();
+        this.meetings = new HashMap<>();
+        this.roomSelectionStrategy = roomSelectionStrategy;
     }
 
     public void setRoomSelectionStrategy(RoomSelectionStrategy roomSelectionStrategy){
@@ -40,9 +51,11 @@ public class MeetingScheduler {
 
 
     // schedule and cancel.
-    public Optional<Meeting> scheduleMeeting(String title, User organizer, List<User> invitees, TimeSlot slot) {
+    public synchronized Optional<Meeting> scheduleMeeting(String title, User organizer, List<User> invitees, TimeSlot slot) {
+        // make a copy list & add organizer to it.
         List<User> attendees = new ArrayList<>(invitees);
         attendees.add(organizer);
+
         for (User u : attendees) {
             if (!u.getSchedule().isFree(slot)) {
                 System.out.println("Cannot schedule: " + u.getName() + " is busy.");
@@ -52,7 +65,7 @@ public class MeetingScheduler {
         // find available rooms
         List<MeetingRoom> listOfMeetingRooms = new ArrayList<>();
         for(MeetingRoom r : rooms.values()){
-            if(r.getSchedule().isFree(slot)) listOfMeetingRooms.add(r);
+            if(r.getSchedule().isFree(slot) && r.getCapacity() >= attendees.size()) listOfMeetingRooms.add(r);
         }
 
         // select from available rooms.
@@ -72,19 +85,22 @@ public class MeetingScheduler {
         return Optional.of(meeting);
     }
 
-    public boolean cancelMeeting(String meetingId, User requester) {
+    public synchronized boolean cancelMeeting(String meetingId, User requester) {
         Meeting meeting = meetings.get(meetingId);
-        if (meeting == null) {
-            System.out.println("Meeting not found.");
+
+        if (meeting == null 
+            || meeting.getMeetingStatus()==MeetingStatus.CANCELLED
+            || !meeting.getOrganizer().getId().equals(requester.getId())) {
+
             return false;
         }
-        if (!meeting.getOrganizer().getId().equals(requester.getId())) {
-            System.out.println("Only the organizer can cancel.");
-            return false;
-        }
+
+
+        // remove meeting from user & room.
+        // keep the meeting in meetings[] (just mark it CANCELLED)
         for (User u : meeting.getParticipants()) u.getSchedule().remove(meeting);
         meeting.getRoom().getSchedule().remove(meeting);
-        meetings.remove(meetingId);
+        meeting.setMeetingStatus(MeetingStatus.CANCELLED);
 
         System.out.println("Cancelled: " + meetingId);
         return true;
