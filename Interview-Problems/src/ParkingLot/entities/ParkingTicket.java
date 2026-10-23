@@ -1,4 +1,4 @@
-package ParkingLot.Parking;
+package ParkingLot.entities;
 
 import java.util.Date;
 import java.util.UUID;
@@ -20,6 +20,13 @@ public class ParkingTicket {
         this.ticketId = UUID.randomUUID().toString();
         this.entryTime = new Date().getTime();
         this.status = TicketStatus.ACTIVE;
+    }
+
+    // -------------- Ticket exit ----------------------
+    public synchronized boolean tryBeginExit(){
+        if(this.status != TicketStatus.ACTIVE) return false;
+        this.status = TicketStatus.PROCESSING;
+        return true;
     }
 
     // getter

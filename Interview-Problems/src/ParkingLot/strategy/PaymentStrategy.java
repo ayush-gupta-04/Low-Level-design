@@ -1,5 +1,7 @@
 package ParkingLot.strategy;
 
+import ParkingLot.entities.Payment;
+
 public interface PaymentStrategy {
-    public boolean pay(double amount);
+    public Payment pay(double amount);
 }

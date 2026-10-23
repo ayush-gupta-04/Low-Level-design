@@ -44,18 +44,23 @@ public class ReservationService {
         }
 
         try {
-            Payment payment = paymentStrategy.pay(estimatedAmount);
+            Payment payment = paymentStrategy.pay(estimatedAmount);   // we generally have a Timeout here .. example 1 min.
 
             // If payment surely fails .. unholdTemporaryReservation() immediately.
-            if(payment==null || payment.getStatus() != PaymentStatus.SUCCESS){
+            if(payment!=null && payment.getStatus() == PaymentStatus.FAILED){
                 unholdTemporaryReservation(reservation);
                 return Optional.empty();
             }
 
+            // If payment is PENDING or null or UNKNOWN: 
+            //  - return Optional.empty();
+            //  - Let the temp reservation hold expire normally.
+            //  - Reconcilation Process will it resolve it later in background.
+
         } catch (Exception e) {
             // Reason of failure can be anything.
-            // We must check then mark the status to CANCELLED.
-            unholdTemporaryReservation(reservation);
+            // We must check the payment status, and act accordingly.
+            // There can be three cases .. SUCCESS, FAILURE, (PENDING or null or UNKNOWN)
             return Optional.empty();
         }
 
@@ -175,3 +180,6 @@ public class ReservationService {
 // 3. Reacquire vehicle lock ... Check reservation status and hold expiry
 //    - Hold is valid ... Confirm reservation
 //    - Hold expired ... Refund or reverse payment
+
+
+

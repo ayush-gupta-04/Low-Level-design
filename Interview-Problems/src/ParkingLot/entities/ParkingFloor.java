@@ -1,4 +1,4 @@
-package ParkingLot.Parking;
+package ParkingLot.entities;
 
 import java.util.Map;
 import java.util.Optional;

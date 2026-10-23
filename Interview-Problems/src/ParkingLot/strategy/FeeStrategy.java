@@ -1,6 +1,6 @@
 package ParkingLot.strategy;
 
-import ParkingLot.Parking.ParkingTicket;
+import ParkingLot.entities.ParkingTicket;
 
 public interface FeeStrategy {
     double calculateFee(ParkingTicket ticket);

@@ -17,9 +17,6 @@ import BookMyShow.enums.SeatStatus;
 import BookMyShow.strategies.PaymentStrategy;
 
 
-
-// TODO : Edge cases handling in every method.
-
 public class BookingManager {
     private static BookingManager instance;
     private final Map<String, Booking> bookings;
@@ -51,18 +48,23 @@ public class BookingManager {
         double amount = show.getPricingStrategy().calcPrice(seats);
 
         try {
-            Payment payment = paymentStrategy.pay(amount);
+            Payment payment = paymentStrategy.pay(amount);  // we generally have a Timeout here .. example 1 min.
             
-            // If payment surely fails .. unholdSeats() immediately.
-            if (payment == null || payment.getStatus() != PaymentStatus.SUCCESS) {
+            // If payment surely fails .. unholdSeats() immediately if it is still locked by the same user.
+            if (payment != null && payment.getStatus() == PaymentStatus.FAILED) {
                 unholdSeats(show, seats, user.getId());
                 return Optional.empty();
             }
 
+            // If payment is PENDING or null or UNKNOWN: 
+            //  - return Optional.empty();
+            //  - Let the temp seat hold expire normally.
+            //  - Reconcilation Process will it resolve it later in background.
+
         }catch (Exception e){
             // Reason of failure can be anything.
-            // We must check then mark the status to CANCELLED.
-            unholdSeats(show, seats, user.getId());
+            // We must check the payment status, and act accordingly.
+            // There can be three cases .. SUCCESS, FAILURE, (PENDING or null or UNKNOWN)
             return Optional.empty();
         }
 
@@ -170,3 +172,62 @@ public class BookingManager {
         }
     }
 }
+
+
+// Timeout in Pay()
+//    - The payment request should have a timeout so your application doesn't wait indefinitely.
+//    - If Request times out, Treat the payment outcome as unknown and reconcile it with the gateway.
+
+
+
+// 2 Edge cases : 
+
+// Situation 1: Payment takes too long
+//      Suppose User A books seats A1 and A2.
+//      Step 1: 
+//         - Temporarily hold the seats
+//         - User A locks A1 and A2. 
+//         - Start a timer, say 5 minutes.
+//      Step 2: 
+//         - Payment gets stuck
+//         - The payment request is taking longer than 5 minutes. 
+//         - User A's seats remain temporarily held until the hold expires.
+//      Step 3: 
+//         - The timer expires
+//         - The timer checks that the same booking attempt still owns the hold and that the seats are still LOCKED. 
+//         - It releases them to AVAILABLE.
+//      Step 4: 
+//         - User B books the seats
+//         - User B successfully holds and books A1 and A2.
+//      Step 5: 
+//         - User A's payment finally succeeds
+//         - confirmSeats() fails because User A no longer owns the seat hold. 
+//         - Do not create User A's booking; initiate a refund instead.
+
+//      Run the payment with a timeout so your thread isn’t stuck.
+//      But it only interrupts your thread.
+//      The gateway may still be processing, so a timeout is the same unknown outcome
+
+
+
+// Situation 2 : 
+//     Suppose the payment gateway successfully charges User A, but a network error occurs before your application receives the response. 
+//     Your code enters the catch block, even though the money has been deducted.
+//     - Payment throws an exception
+//     - Payment outcome is UNKNOWN, not necessarily FAILED.
+
+//     - Check the payment status : 
+//       Query the payment gateway using the payment attempt ID, or wait for its callback.
+
+//     Case 1 : Payment failed
+//              - unholdSeats() immediately if it is still locked by the same user.
+//     Case 2 : Still unknown?
+//              Allow the seat hold to expire normally.
+//              If payment is later confirmed successful after the hold is lost, initiate a refund.
+//     Case 3 : Payment succeeded 
+//              Confirm the seats if the hold is still valid and owned by the same User.
+//              Otherwise, initiate a refund.
+
+
+// The reconciliation
+//     A background worker periodically checks the gateway, or processes a payment webhook, until the actual payment outcome is known.

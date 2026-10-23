@@ -48,6 +48,8 @@ public class RentalService {
         Reservation reservation = reservationService.get(reservationId);
         if (reservation == null) return Optional.empty();
 
+        Vehicle vehicle = reservation.getVehicle();
+
         // Step 1: Atomically claim the return operation.
         if (!beginReturnProcessing(reservation, returnDate)) {
             return Optional.empty();
@@ -63,26 +65,28 @@ public class RentalService {
         if (amountDue > 0) {
             try {
                 Payment payment = paymentStrategy.pay(amountDue);
-                if (payment == null || payment.getStatus() != PaymentStatus.SUCCESS) {
-                    restoreOngoingStatus(reservation);  // The user can retry.
+                
+                if (payment != null && payment.getStatus() == PaymentStatus.FAILED) {
+                    reservation.setStatus(ReservationStatus.ONGOING);
                     return Optional.empty();
                 }
+
+                // If payment is PENDING or null or UNKNOWN: 
+                //  - For now: leave ticket in PROCESSING & return false;
+                //  - Reconcilation Process will it resolve it later in background.
+
             } catch (Exception e) {
                 // Reason of failure can be anything.
-                // We must check then restore status to ONGOING.
-                restoreOngoingStatus(reservation);
+                // We must check the payment status, and act accordingly.
+                // There can be three cases .. SUCCESS, FAILURE, (PENDING or null or UNKNOWN)
+                return Optional.empty();
             }
         }
 
 
-        // Step 5: Atomically finalize the return.
-        if (!finalizeReturn(reservation)) {
-            // If I cannot finalize .. because timer restored the temporary hold.
-            // If payment succeeded, initiate an idempotent refund through a refund/payment service here.
-            return Optional.empty();
-        }
-
-        // The System has confirmed the return.
+        // finalize the return.
+        reservation.setStatus(ReservationStatus.COMPLETED);
+        vehicle.setStatus(VehicleStatus.AVAILABLE);
         System.out.println("Return Confirmed : " + reservation.getId());
         return Optional.of(bill);
     }
@@ -90,16 +94,6 @@ public class RentalService {
 
 
     // ------------ Helper Functions ---------------
-    private void restoreOngoingStatus(Reservation reservation) {
-        Vehicle vehicle = reservation.getVehicle();
-        synchronized (vehicle) {
-            if (reservation.getStatus() == ReservationStatus.RETURN_PROCESSING) {
-                reservation.setStatus(ReservationStatus.ONGOING);
-            }
-        }
-    }
-
-    // TODO : Ideally a timer would restoreOngoingStatus() if it is still RETURN_PROCESSING.
 
     private boolean beginReturnProcessing(Reservation reservation, LocalDate returnDate) {
         Vehicle vehicle = reservation.getVehicle();
@@ -108,17 +102,6 @@ public class RentalService {
                 return false;
             }
             reservation.setStatus(ReservationStatus.RETURN_PROCESSING);
-            return true;
-        }
-    }
-    private boolean finalizeReturn(Reservation reservation) {
-        Vehicle vehicle = reservation.getVehicle();
-        synchronized (vehicle) {
-            if (reservation.getStatus() != ReservationStatus.RETURN_PROCESSING) {
-                return false;
-            }
-            reservation.setStatus(ReservationStatus.COMPLETED);
-            vehicle.setStatus(VehicleStatus.AVAILABLE);
             return true;
         }
     }

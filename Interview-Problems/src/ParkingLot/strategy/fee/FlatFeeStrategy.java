@@ -1,6 +1,6 @@
 package ParkingLot.strategy.fee;
 
-import ParkingLot.Parking.ParkingTicket;
+import ParkingLot.entities.ParkingTicket;
 import ParkingLot.strategy.FeeStrategy;
 
 public class FlatFeeStrategy implements FeeStrategy {
